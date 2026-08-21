@@ -9,10 +9,18 @@ export default defineConfig({
     tailwindcss()
   ],
   server: {
+    // These proxies make development mimic production's same-origin setup.
+    // Both the API client and the WebSocket hook now derive their URLs from
+    // the current page, so without the /ws entry the socket would try to
+    // connect to Vite on :5173 rather than Django on :8000.
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
+      },
+      '/ws': {
+        target: 'ws://127.0.0.1:8000',
+        ws: true,
       }
     }
   }

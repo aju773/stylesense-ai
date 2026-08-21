@@ -1,0 +1,40 @@
+# Keeping the build context small matters twice over: it is uploaded to the
+# builder on every build, and anything copied in becomes a cache-busting input.
+
+.git
+.gitignore
+
+# Never let a local .env reach an image layer. Even a later deletion would
+# leave it recoverable in the layer history.
+**/.env
+**/.env.*
+!**/.env.example
+
+# Rebuilt inside the image; copying host copies would both bloat the context
+# and risk platform-mismatched native modules.
+**/node_modules
+**/.venv
+**/dist
+
+**/__pycache__
+**/*.py[cod]
+**/.ruff_cache
+**/.pytest_cache
+**/.mypy_cache
+
+**/*.sqlite3
+**/staticfiles
+
+# Not needed at runtime. designs/ alone is 4.5MB of PNGs.
+designs
+docs
+planning
+progress.md
+CLAUDE.md
+README.md
+.github
+
+**/.DS_Store
+**/*.log
+**/.vscode
+**/.idea

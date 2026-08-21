@@ -1,7 +1,15 @@
 import axios from "axios";
 
+// Relative, not absolute. In production Django serves this bundle and the API
+// from the same origin, so "/api" resolves correctly with no build-time
+// configuration. In development Vite's proxy (see vite.config.ts) forwards
+// /api to Django on :8000.
+//
+// Keeping it same-origin is also what lets the auth cookie stay SameSite=Lax
+// instead of SameSite=None, which Safari and Brave would block as a
+// third-party cookie.
 const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: "/api",
   withCredentials: true,
 })
 

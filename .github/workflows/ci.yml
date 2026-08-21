@@ -1,0 +1,119 @@
+name: CI
+
+# Render deploys main automatically, so this runs on the same pushes. It cannot
+# block that deploy — Render's health check is what protects production from a
+# container that will not boot. What CI catches is the other class of problem:
+# code that builds and boots but is wrong.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# A newer push makes an in-flight run irrelevant; cancel it rather than paying
+# for both.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+
+      - name: Install dependencies
+        working-directory: backend
+        # --frozen fails if uv.lock disagrees with pyproject.toml, so a
+        # dependency added without regenerating the lockfile is caught here
+        # rather than producing an image built from different versions than
+        # anyone tested.
+        run: uv sync --frozen
+
+      - name: Lint
+        working-directory: backend
+        run: uv run ruff check .
+
+      - name: Format check
+        working-directory: backend
+        run: uv run ruff format --check .
+
+      - name: Django system check (production settings)
+        working-directory: backend
+        env:
+          DJANGO_SETTINGS_MODULE: core.settings.production
+          DJANGO_SECRET_KEY: ci-only-not-a-real-secret
+          DJANGO_ALLOWED_HOSTS: example.com
+          DATABASE_URL: postgres://u:p@127.0.0.1:5432/db
+        # --deploy runs the production hardening checks. --fail-level ERROR
+        # keeps the two known HSTS warnings (deliberately left off for a shared
+        # .onrender.com subdomain) from failing the build, while any genuine
+        # misconfiguration still does.
+        run: uv run python manage.py check --deploy --fail-level ERROR
+
+      - name: Missing migrations
+        working-directory: backend
+        env:
+          DJANGO_SETTINGS_MODULE: core.settings.production
+          DJANGO_SECRET_KEY: ci-only-not-a-real-secret
+          DATABASE_URL: postgres://u:p@127.0.0.1:5432/db
+        # Catches the classic outage: a model changed, no migration generated,
+        # and production starts throwing ProgrammingError on a column that does
+        # not exist. --check --dry-run needs no database.
+        run: uv run python manage.py makemigrations --check --dry-run
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        working-directory: frontend
+        run: pnpm lint
+
+      - name: Typecheck and build
+        working-directory: frontend
+        # `pnpm build` is `tsc -b && vite build`, so this is both the
+        # typecheck and proof the bundle compiles. With no test suite yet,
+        # this is the main thing standing between a bad push and a broken UI.
+        run: pnpm build
+
+  docker:
+    name: Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          # Builds exactly what Render will build. Catches Dockerfile breakage
+          # before the deploy rather than during it.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

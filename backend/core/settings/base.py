@@ -22,16 +22,18 @@ env = environ.Env()
 environ.Env.read_env(BASE_DIR / ".env")
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+# Base settings FAIL CLOSED: every security-relevant default here is the safe
+# one, and local.py is what loosens them for development. If production.py ever
+# forgets an override, the result is a loud crash or a locked-down site — never
+# a public site silently running with DEBUG on and a known secret key.
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-dagi8bfvu_6*7q@myio)so_@%3%aeume01(s&y4fk3_p9_mf+t"
+# No fallback on purpose. A missing DJANGO_SECRET_KEY must stop the process,
+# not quietly boot with a shared default that is committed to a public repo.
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
 
 
 # Application definition
@@ -59,6 +61,10 @@ AUTH_USER_MODEL = "users.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    # Must sit immediately after SecurityMiddleware and above everything else:
+    # static files should be served without paying for session lookups, auth,
+    # or CORS processing on every asset request.
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -98,6 +104,15 @@ DATABASES = {
     )
 }
 
+# Neon suspends idle compute after ~5 minutes. A connection Django is holding
+# across requests becomes a stale handle pointing at a process that no longer
+# exists, and the next query dies with "server closed the connection
+# unexpectedly". Recycling connections well inside that window avoids it.
+# Paired with Neon's POOLED connection string (the one via PgBouncer), which is
+# what the production DATABASE_URL must use.
+DATABASES["default"]["CONN_MAX_AGE"] = env.int("DJANGO_CONN_MAX_AGE", default=120)
+DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -133,6 +148,33 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# The Vite build lands here (the Dockerfile copies frontend/dist into it).
+#
+# It is served by WHITENOISE_ROOT rather than being fed through collectstatic,
+# and that is deliberate. Vite already content-hashes its own filenames
+# (index-xboVV9o4.js). Running it through ManifestStaticFilesStorage would hash
+# those names a SECOND time, but the manifest only rewrites references inside
+# CSS — never inside index.html. The HTML would keep pointing at the original
+# name and every asset would 404. Serving dist/ verbatim at the web root avoids
+# the double-hash entirely and loses nothing, since Vite's hashes already give
+# correct cache busting.
+#
+# Django's own static files (the admin) still go through collectstatic and are
+# served under /static/ with manifest hashing.
+FRONTEND_DIST = BASE_DIR / "frontend_dist"
+WHITENOISE_ROOT = FRONTEND_DIST if FRONTEND_DIST.is_dir() else None
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        # Hashed filenames + long-lived cache headers, gzip/brotli precompressed.
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -146,8 +188,18 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_THROTTLE_RATES": {
         "chat": "5/min",
+        # Registration is AllowAny, so without this an unauthenticated client
+        # can mint unlimited accounts and defeat any per-user AI quota by
+        # simply making new users.
+        "register": "5/hour",
     },
 }
+
+# Ceiling on AI calls across ALL users per UTC day. The per-connection limit in
+# the WebSocket consumer resets when a socket reconnects, and per-user limits
+# fall to multi-account abuse; this is the backstop that actually bounds spend.
+# When it trips, chat degrades to a polite message instead of draining quota.
+AI_DAILY_CALL_LIMIT = env.int("AI_DAILY_CALL_LIMIT", default=200)
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
@@ -156,13 +208,26 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "AUTH_COOKIE": "access_token",
     "AUTH_COOKIE_REFRESH": "refresh_token",
-    "AUTH_COOKIE_SECURE": False,
+    # Secure by default: cookie only travels over HTTPS. local.py turns this
+    # off, because dev runs on plain http and the cookie would never be set.
+    "AUTH_COOKIE_SECURE": True,
     "AUTH_COOKIE_HTTP_ONLY": True,
+    # Lax is only viable because production serves the SPA and the API from one
+    # origin. If the frontend is ever split onto its own domain this must become
+    # "None" (and stays Secure) — at which point Safari and Brave will block it
+    # as a third-party cookie and logins break for those users.
     "AUTH_COOKIE_SAMESITE": "Lax",
 }
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+# Empty in production: same-origin means there is no cross-origin request to
+# permit, and an empty allowlist is the correct, tightest setting. local.py
+# opens this up for the Vite dev server on :5173.
+CORS_ALLOWED_ORIGINS = env.list("DJANGO_CORS_ALLOWED_ORIGINS", default=[])
 CORS_ALLOW_CREDENTIALS = True
+
+# Django requires the full scheme here, unlike ALLOWED_HOSTS. Needed for admin
+# login and any session-authenticated POST.
+CSRF_TRUSTED_ORIGINS = env.list("DJANGO_CSRF_TRUSTED_ORIGINS", default=[])
 GEMINI_API_KEY = env("GEMINI_API_KEY", default=None)
 GROQ_API_KEY = env("GROQ_API_KEY", default=None)
 
@@ -177,11 +242,17 @@ AI_PROVIDERS = [
     },
 ]
 
+# ChatConsumer uses no group_add/group_send/group_discard — it streams only to
+# the socket that asked. A channel layer is required by Channels but never
+# actually carries traffic between processes here, so the in-memory layer is
+# correct AND is what lets production run with no Redis at all.
+#
+# This holds only while the deployment is a single process. If Daphne is ever
+# run with multiple workers, or the service scales beyond one instance, revisit
+# this — and note the consumer's in-memory rate limiting has the same
+# single-process assumption baked in.
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6381)],
-        },
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }

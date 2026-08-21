@@ -7,7 +7,15 @@ export interface ChatMessage {
   content: string;
 }
 
-const WS_URL = "ws://localhost:8000/ws/chat/";
+// Derived from the current page rather than hardcoded, so the same build works
+// on localhost and in production with no environment variable.
+//
+// The protocol swap is not cosmetic: a page served over https may not open a
+// plain ws:// socket. Browsers block it as mixed content, and the failure is
+// silent enough to be genuinely confusing — the socket just never connects.
+const WS_URL = `${window.location.protocol === "https:" ? "wss:" : "ws:"}//${
+  window.location.host
+}/ws/chat/`;
 const MAX_RECONNECT_DELAY_MS = 30000;
 
 export function useChat() {

@@ -16,11 +16,19 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
+
+from core.views import healthz, spa
 
 urlpatterns = [
+    path("healthz", healthz, name="healthz"),
     path("admin/", admin.site.urls),
     path("api/auth/", include("apps.users.urls")),
     path("api/products/", include("apps.products.urls")),
     path("api/chat/", include("apps.chat.urls")),
+    # Catch-all for React Router. MUST stay last: it matches everything, so any
+    # pattern below it would be unreachable. Paths handled before Django's URL
+    # resolver is even consulted (/static/, and the built assets served by
+    # WhiteNoise from the web root) are unaffected.
+    re_path(r"^(?!api/|admin/|static/|healthz).*$", spa, name="spa"),
 ]
