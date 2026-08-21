@@ -33,14 +33,25 @@ services:
     # safety net between a bad push and a broken portfolio link.
     healthCheckPath: /healthz
 
-    # Runs after the image builds, before traffic moves over. Both commands are
-    # idempotent: migrate is a no-op when there is nothing new, and
-    # seed_products uses get_or_create.
+    # NOTE: there is deliberately no preDeployCommand here.
     #
-    # seed_embeddings is deliberately NOT here. It calls the Gemini API, and a
-    # transient rate limit would fail an otherwise unrelated deploy. Run it once
-    # from a local machine pointed at the Neon URL.
-    preDeployCommand: "python manage.py migrate --noinput && python manage.py seed_products"
+    # Render rejects it on the free tier ("pre-deploy command is not supported
+    # for free tier services"), so migrations and catalogue seeding are run
+    # manually from a local machine pointed at the Neon DATABASE_URL:
+    #
+    #   cd backend
+    #   DATABASE_URL="<neon-pooled-url>" uv run python manage.py migrate
+    #   DATABASE_URL="<neon-pooled-url>" uv run python manage.py seed_products
+    #   DATABASE_URL="<neon-pooled-url>" uv run python manage.py seed_embeddings
+    #
+    # All three are idempotent, so re-running them is safe. The practical
+    # consequence is that a deploy carrying a new migration needs that migrate
+    # run BEFORE the deploy goes live, or the new code will query columns that
+    # do not exist yet. Running it first is safe because Django migrations are
+    # additive by default.
+    #
+    # Restoring the automated version is a one-line change if this ever moves
+    # to a paid instance type.
 
     envVars:
       - key: DJANGO_SETTINGS_MODULE
