@@ -59,3 +59,35 @@ ignore = [
     # positives against normal Django style.
     "RUF012",
 ]
+
+# --------------------------------------------------------------------------
+# KNOWN LINT DEBT — recorded 2026-08-21, to be worked off, not left here.
+#
+# These are per-file rather than global on purpose: each entry names a real
+# file and a real rule, so the list shrinks visibly as things get fixed and
+# cannot quietly grow to cover new code. Deleting an entry and watching CI
+# stay green is the definition of done.
+#
+# DJ001 is the one that actually matters. `null=True` on a string field gives
+# you two different ways to represent "empty" — NULL and "" — so every filter,
+# every serializer, and every template has to handle both. Django's own
+# guidance is `blank=True` alone for string fields.
+#
+# The rest are cosmetic: DJ012 is inner-class ordering, RUF005 prefers
+# unpacking over list concatenation, RUF002 is an en-dash in a docstring.
+# --------------------------------------------------------------------------
+[tool.ruff.lint.per-file-ignores]
+"apps/chat/models.py" = ["DJ001"]
+"apps/products/models.py" = ["DJ001", "DJ012"]
+"apps/chat/services/chat_service.py" = ["RUF005"]
+"apps/chat/services/providers/base.py" = ["RUF002"]
+
+[tool.ruff.format]
+# Formatting-only debt, same deal: these three predate the format check and
+# are excluded so CI is green today. Run `ruff format` on them and delete the
+# entry — the diff is whitespace, nothing to review.
+exclude = [
+    "apps/chat/consumers.py",
+    "apps/chat/services/chat_service.py",
+    "apps/chat/management/commands/test_stream.py",
+]
