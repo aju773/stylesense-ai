@@ -1,0 +1,25 @@
+# Pinned so the Compose project name (and therefore the volume prefix,
+# my-project_postgres_data) survives this file moving into backend/.
+# Without it Compose derives the name from the directory and silently
+# creates a fresh, empty database.
+name: my-project
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: stylesense
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6381:6379"
+
+volumes:
+  postgres_data:

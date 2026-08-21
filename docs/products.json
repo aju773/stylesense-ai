@@ -1,0 +1,1124 @@
+[
+  {
+    "id": 1,
+    "name": "Chic Polyester Jeans",
+    "brand": "FabIndia",
+    "category": "Jeans",
+    "price": 4492,
+    "discount_price": 3531,
+    "description": "Elevate your wardrobe with this stunning jeans from FabIndia. Ideal for men's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "S",
+      "XL"
+    ],
+    "colors": [
+      "Red",
+      "Beige"
+    ],
+    "gender": "Men",
+    "stock": 61,
+    "rating": 4.8
+  },
+  {
+    "id": 2,
+    "name": "Classic Linen Trousers",
+    "brand": "Zara",
+    "category": "Trousers",
+    "price": 6754,
+    "discount_price": null,
+    "description": "Elevate your wardrobe with this stunning trousers from Zara. Ideal for women's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "S",
+      "XL",
+      "XXL"
+    ],
+    "colors": [
+      "White",
+      "Navy",
+      "Black",
+      "Pink"
+    ],
+    "gender": "Women",
+    "stock": 79,
+    "rating": 4.6
+  },
+  {
+    "id": 3,
+    "name": "Premium Wool Jackets",
+    "brand": "FabIndia",
+    "category": "Jackets",
+    "price": 4102,
+    "discount_price": 2961,
+    "description": "Experience the premium feel of linen with this premium wool jackets. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "White",
+      "Green",
+      "Navy",
+      "Blue"
+    ],
+    "gender": "Men",
+    "stock": 69,
+    "rating": 3.5
+  },
+  {
+    "id": 4,
+    "name": "Stylish Polyester Jeans",
+    "brand": "H&M",
+    "category": "Jeans",
+    "price": 3619,
+    "discount_price": null,
+    "description": "Elevate your wardrobe with this stunning jeans from H&M. Ideal for women's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "S"
+    ],
+    "colors": [
+      "Pink",
+      "Red"
+    ],
+    "gender": "Women",
+    "stock": 89,
+    "rating": 4.4
+  },
+  {
+    "id": 5,
+    "name": "Comfortable Linen Kurtas",
+    "brand": "W",
+    "category": "Kurtas",
+    "price": 7395,
+    "discount_price": null,
+    "description": "Elevate your wardrobe with this stunning kurtas from W. Ideal for women's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "S",
+      "XS"
+    ],
+    "colors": [
+      "Pink",
+      "Beige",
+      "Black"
+    ],
+    "gender": "Women",
+    "stock": 91,
+    "rating": 4.1
+  },
+  {
+    "id": 6,
+    "name": "Classic Cotton Tops",
+    "brand": "Allen Solly",
+    "category": "Tops",
+    "price": 5927,
+    "discount_price": 4775,
+    "description": "Experience the premium feel of polyester with this classic cotton tops. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "colors": [
+      "Red",
+      "Blue",
+      "Navy"
+    ],
+    "gender": "Unisex",
+    "stock": 74,
+    "rating": 4.1
+  },
+  {
+    "id": 7,
+    "name": "Stylish Denim Dresses",
+    "brand": "W",
+    "category": "Dresses",
+    "price": 1177,
+    "discount_price": null,
+    "description": "Elevate your wardrobe with this stunning dresses from W. Ideal for women's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "S",
+      "XL",
+      "XXL"
+    ],
+    "colors": [
+      "Green",
+      "Navy"
+    ],
+    "gender": "Women",
+    "stock": 52,
+    "rating": 4.7
+  },
+  {
+    "id": 8,
+    "name": "Stylish Silk Shirts",
+    "brand": "H&M",
+    "category": "Shirts",
+    "price": 6830,
+    "discount_price": 5824,
+    "description": "Elevate your wardrobe with this stunning shirts from H&M. Ideal for women's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "S",
+      "XL",
+      "XS"
+    ],
+    "colors": [
+      "Navy",
+      "Black",
+      "Beige"
+    ],
+    "gender": "Women",
+    "stock": 24,
+    "rating": 4.2
+  },
+  {
+    "id": 9,
+    "name": "Elegant Wool Trousers",
+    "brand": "Biba",
+    "category": "Trousers",
+    "price": 3452,
+    "discount_price": null,
+    "description": "A elegant wool trousers perfect for any occasion. Crafted by Biba to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "S"
+    ],
+    "colors": [
+      "Black",
+      "White"
+    ],
+    "gender": "Women",
+    "stock": 52,
+    "rating": 4.9
+  },
+  {
+    "id": 10,
+    "name": "Premium Denim Jackets",
+    "brand": "FabIndia",
+    "category": "Jackets",
+    "price": 6450,
+    "discount_price": null,
+    "description": "A premium denim jackets perfect for any occasion. Crafted by FabIndia to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "S",
+      "XL",
+      "XXL"
+    ],
+    "colors": [
+      "Blue",
+      "Navy",
+      "Beige"
+    ],
+    "gender": "Unisex",
+    "stock": 27,
+    "rating": 4.9
+  },
+  {
+    "id": 11,
+    "name": "Elegant Silk Kurtas",
+    "brand": "Biba",
+    "category": "Kurtas",
+    "price": 979,
+    "discount_price": 749,
+    "description": "Experience the premium feel of blend with this elegant silk kurtas. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "XS"
+    ],
+    "colors": [
+      "Red",
+      "Blue",
+      "Green",
+      "White"
+    ],
+    "gender": "Women",
+    "stock": 29,
+    "rating": 3.8
+  },
+  {
+    "id": 12,
+    "name": "Vintage Denim Kurtas",
+    "brand": "W",
+    "category": "Kurtas",
+    "price": 5186,
+    "discount_price": null,
+    "description": "A vintage denim kurtas perfect for any occasion. Crafted by W to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "XS"
+    ],
+    "colors": [
+      "White",
+      "Pink",
+      "Green"
+    ],
+    "gender": "Women",
+    "stock": 46,
+    "rating": 3.6
+  },
+  {
+    "id": 13,
+    "name": "Stylish Linen Kurtas",
+    "brand": "Allen Solly",
+    "category": "Kurtas",
+    "price": 7039,
+    "discount_price": null,
+    "description": "A stylish linen kurtas perfect for any occasion. Crafted by Allen Solly to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "XXL"
+    ],
+    "colors": [
+      "Black",
+      "Blue"
+    ],
+    "gender": "Women",
+    "stock": 27,
+    "rating": 3.8
+  },
+  {
+    "id": 14,
+    "name": "Modern Cotton Shirts",
+    "brand": "Allen Solly",
+    "category": "Shirts",
+    "price": 624,
+    "discount_price": null,
+    "description": "Elevate your wardrobe with this stunning shirts from Allen Solly. Ideal for men's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "XL",
+      "XXL"
+    ],
+    "colors": [
+      "Beige",
+      "Green",
+      "White",
+      "Black"
+    ],
+    "gender": "Men",
+    "stock": 80,
+    "rating": 4.5
+  },
+  {
+    "id": 15,
+    "name": "Comfortable Silk Trousers",
+    "brand": "FabIndia",
+    "category": "Trousers",
+    "price": 3378,
+    "discount_price": null,
+    "description": "A comfortable silk trousers perfect for any occasion. Crafted by FabIndia to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "S",
+      "XXL"
+    ],
+    "colors": [
+      "White",
+      "Green",
+      "Navy"
+    ],
+    "gender": "Men",
+    "stock": 74,
+    "rating": 4.3
+  },
+  {
+    "id": 16,
+    "name": "Casual Cotton Jeans",
+    "brand": "Allen Solly",
+    "category": "Jeans",
+    "price": 840,
+    "discount_price": 589,
+    "description": "A casual cotton jeans perfect for any occasion. Crafted by Allen Solly to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "S",
+      "XL",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "Navy",
+      "White",
+      "Beige"
+    ],
+    "gender": "Unisex",
+    "stock": 34,
+    "rating": 4.1
+  },
+  {
+    "id": 17,
+    "name": "Chic Silk Trousers",
+    "brand": "Biba",
+    "category": "Trousers",
+    "price": 1885,
+    "discount_price": null,
+    "description": "A chic silk trousers perfect for any occasion. Crafted by Biba to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "S",
+      "XL"
+    ],
+    "colors": [
+      "White",
+      "Black"
+    ],
+    "gender": "Women",
+    "stock": 68,
+    "rating": 4.8
+  },
+  {
+    "id": 18,
+    "name": "Modern Viscose Dresses",
+    "brand": "Allen Solly",
+    "category": "Dresses",
+    "price": 5002,
+    "discount_price": 3878,
+    "description": "Elevate your wardrobe with this stunning dresses from Allen Solly. Ideal for unisex's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "S",
+      "XL",
+      "XXL"
+    ],
+    "colors": [
+      "Navy",
+      "Red",
+      "Blue"
+    ],
+    "gender": "Unisex",
+    "stock": 35,
+    "rating": 4.3
+  },
+  {
+    "id": 19,
+    "name": "Everyday Linen Tops",
+    "brand": "W",
+    "category": "Tops",
+    "price": 1346,
+    "discount_price": 1107,
+    "description": "A everyday linen tops perfect for any occasion. Crafted by W to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "S",
+      "XL",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "White",
+      "Beige"
+    ],
+    "gender": "Women",
+    "stock": 68,
+    "rating": 3.5
+  },
+  {
+    "id": 20,
+    "name": "Comfortable Linen T-Shirts",
+    "brand": "Zara",
+    "category": "T-Shirts",
+    "price": 6363,
+    "discount_price": null,
+    "description": "Elevate your wardrobe with this stunning t-shirts from Zara. Ideal for men's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "S",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "Green",
+      "Red",
+      "Navy"
+    ],
+    "gender": "Men",
+    "stock": 75,
+    "rating": 4.3
+  },
+  {
+    "id": 21,
+    "name": "Elegant Polyester Trousers",
+    "brand": "FabIndia",
+    "category": "Trousers",
+    "price": 1541,
+    "discount_price": null,
+    "description": "A elegant polyester trousers perfect for any occasion. Crafted by FabIndia to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "S",
+      "XS"
+    ],
+    "colors": [
+      "Navy",
+      "Blue",
+      "Green",
+      "White"
+    ],
+    "gender": "Women",
+    "stock": 98,
+    "rating": 4.4
+  },
+  {
+    "id": 22,
+    "name": "Vintage Denim Jeans",
+    "brand": "FabIndia",
+    "category": "Jeans",
+    "price": 728,
+    "discount_price": 555,
+    "description": "A vintage denim jeans perfect for any occasion. Crafted by FabIndia to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "S",
+      "XL",
+      "XS"
+    ],
+    "colors": [
+      "White",
+      "Pink",
+      "Black"
+    ],
+    "gender": "Unisex",
+    "stock": 31,
+    "rating": 3.8
+  },
+  {
+    "id": 23,
+    "name": "Chic Linen Kurtas",
+    "brand": "Levi's",
+    "category": "Kurtas",
+    "price": 4001,
+    "discount_price": 2802,
+    "description": "A chic linen kurtas perfect for any occasion. Crafted by Levi's to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "XL",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "Black",
+      "Blue",
+      "White",
+      "Beige"
+    ],
+    "gender": "Women",
+    "stock": 47,
+    "rating": 4.9
+  },
+  {
+    "id": 24,
+    "name": "Chic Denim Trousers",
+    "brand": "W",
+    "category": "Trousers",
+    "price": 6717,
+    "discount_price": null,
+    "description": "Elevate your wardrobe with this stunning trousers from W. Ideal for women's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "XL"
+    ],
+    "colors": [
+      "Pink",
+      "Navy"
+    ],
+    "gender": "Women",
+    "stock": 66,
+    "rating": 4.8
+  },
+  {
+    "id": 25,
+    "name": "Elegant Viscose Kurtas",
+    "brand": "W",
+    "category": "Kurtas",
+    "price": 2368,
+    "discount_price": null,
+    "description": "Elevate your wardrobe with this stunning kurtas from W. Ideal for women's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "S",
+      "XS"
+    ],
+    "colors": [
+      "Pink",
+      "White"
+    ],
+    "gender": "Women",
+    "stock": 80,
+    "rating": 4.3
+  },
+  {
+    "id": 26,
+    "name": "Vintage Polyester Jeans",
+    "brand": "Allen Solly",
+    "category": "Jeans",
+    "price": 2235,
+    "discount_price": 1573,
+    "description": "Elevate your wardrobe with this stunning jeans from Allen Solly. Ideal for men's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "S",
+      "XL",
+      "XXL"
+    ],
+    "colors": [
+      "Red",
+      "Navy",
+      "Pink"
+    ],
+    "gender": "Men",
+    "stock": 4,
+    "rating": 3.9
+  },
+  {
+    "id": 27,
+    "name": "Elegant Blend Jeans",
+    "brand": "Levi's",
+    "category": "Jeans",
+    "price": 1331,
+    "discount_price": null,
+    "description": "Experience the premium feel of linen with this elegant blend jeans. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "S"
+    ],
+    "colors": [
+      "Blue",
+      "Green",
+      "Navy"
+    ],
+    "gender": "Unisex",
+    "stock": 34,
+    "rating": 4.8
+  },
+  {
+    "id": 28,
+    "name": "Chic Linen Shirts",
+    "brand": "Allen Solly",
+    "category": "Shirts",
+    "price": 1795,
+    "discount_price": 1325,
+    "description": "Experience the premium feel of wool with this chic linen shirts. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "XXL"
+    ],
+    "colors": [
+      "Red",
+      "Pink",
+      "Green",
+      "Black"
+    ],
+    "gender": "Unisex",
+    "stock": 94,
+    "rating": 3.6
+  },
+  {
+    "id": 29,
+    "name": "Everyday Polyester Jeans",
+    "brand": "H&M",
+    "category": "Jeans",
+    "price": 3502,
+    "discount_price": null,
+    "description": "Experience the premium feel of linen with this everyday polyester jeans. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "S",
+      "XXL"
+    ],
+    "colors": [
+      "Beige",
+      "Green"
+    ],
+    "gender": "Men",
+    "stock": 54,
+    "rating": 3.6
+  },
+  {
+    "id": 30,
+    "name": "Premium Polyester Jackets",
+    "brand": "Mango",
+    "category": "Jackets",
+    "price": 6212,
+    "discount_price": null,
+    "description": "A premium polyester jackets perfect for any occasion. Crafted by Mango to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "XL",
+      "XS"
+    ],
+    "colors": [
+      "Beige",
+      "Green"
+    ],
+    "gender": "Men",
+    "stock": 62,
+    "rating": 3.7
+  },
+  {
+    "id": 31,
+    "name": "Chic Linen Tops",
+    "brand": "Levi's",
+    "category": "Tops",
+    "price": 5757,
+    "discount_price": null,
+    "description": "Elevate your wardrobe with this stunning tops from Levi's. Ideal for men's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "XS"
+    ],
+    "colors": [
+      "Beige",
+      "Blue",
+      "Pink",
+      "White"
+    ],
+    "gender": "Men",
+    "stock": 51,
+    "rating": 3.6
+  },
+  {
+    "id": 32,
+    "name": "Classic Cotton Trousers",
+    "brand": "Zara",
+    "category": "Trousers",
+    "price": 2396,
+    "discount_price": null,
+    "description": "A classic cotton trousers perfect for any occasion. Crafted by Zara to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "XL",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "Red",
+      "Beige",
+      "Blue"
+    ],
+    "gender": "Unisex",
+    "stock": 43,
+    "rating": 3.8
+  },
+  {
+    "id": 33,
+    "name": "Vintage Cotton Jackets",
+    "brand": "FabIndia",
+    "category": "Jackets",
+    "price": 5088,
+    "discount_price": 3785,
+    "description": "Experience the premium feel of linen with this vintage cotton jackets. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "XL",
+      "XS"
+    ],
+    "colors": [
+      "Navy",
+      "Pink",
+      "Blue",
+      "Beige"
+    ],
+    "gender": "Men",
+    "stock": 5,
+    "rating": 3.9
+  },
+  {
+    "id": 34,
+    "name": "Stylish Blend Kurtas",
+    "brand": "Biba",
+    "category": "Kurtas",
+    "price": 5549,
+    "discount_price": 4146,
+    "description": "A stylish blend kurtas perfect for any occasion. Crafted by Biba to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "XL",
+      "XS"
+    ],
+    "colors": [
+      "Beige",
+      "Red",
+      "White"
+    ],
+    "gender": "Women",
+    "stock": 34,
+    "rating": 4.5
+  },
+  {
+    "id": 35,
+    "name": "Stylish Linen Tops",
+    "brand": "FabIndia",
+    "category": "Tops",
+    "price": 2432,
+    "discount_price": 1842,
+    "description": "Elevate your wardrobe with this stunning tops from FabIndia. Ideal for unisex's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "S",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "Red",
+      "Beige",
+      "Blue"
+    ],
+    "gender": "Unisex",
+    "stock": 73,
+    "rating": 4.1
+  },
+  {
+    "id": 36,
+    "name": "Stylish Silk Tops",
+    "brand": "Mango",
+    "category": "Tops",
+    "price": 2553,
+    "discount_price": null,
+    "description": "Experience the premium feel of denim with this stylish silk tops. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "S",
+      "XL"
+    ],
+    "colors": [
+      "Green",
+      "White"
+    ],
+    "gender": "Women",
+    "stock": 54,
+    "rating": 3.5
+  },
+  {
+    "id": 37,
+    "name": "Modern Linen Dresses",
+    "brand": "FabIndia",
+    "category": "Dresses",
+    "price": 5156,
+    "discount_price": null,
+    "description": "Experience the premium feel of silk with this modern linen dresses. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "S",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "Beige",
+      "White",
+      "Black",
+      "Green"
+    ],
+    "gender": "Men",
+    "stock": 30,
+    "rating": 4.3
+  },
+  {
+    "id": 38,
+    "name": "Casual Viscose Dresses",
+    "brand": "W",
+    "category": "Dresses",
+    "price": 3595,
+    "discount_price": null,
+    "description": "Elevate your wardrobe with this stunning dresses from W. Ideal for women's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "XS"
+    ],
+    "colors": [
+      "Beige",
+      "Navy",
+      "White",
+      "Red"
+    ],
+    "gender": "Women",
+    "stock": 59,
+    "rating": 3.9
+  },
+  {
+    "id": 39,
+    "name": "Elegant Linen Tops",
+    "brand": "Mango",
+    "category": "Tops",
+    "price": 1995,
+    "discount_price": null,
+    "description": "Elevate your wardrobe with this stunning tops from Mango. Ideal for unisex's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "S",
+      "XL"
+    ],
+    "colors": [
+      "Beige",
+      "Blue",
+      "Red"
+    ],
+    "gender": "Unisex",
+    "stock": 58,
+    "rating": 3.7
+  },
+  {
+    "id": 40,
+    "name": "Elegant Cotton Dresses",
+    "brand": "H&M",
+    "category": "Dresses",
+    "price": 1032,
+    "discount_price": null,
+    "description": "Experience the premium feel of denim with this elegant cotton dresses. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "XL",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "Navy",
+      "Beige",
+      "Pink",
+      "Black"
+    ],
+    "gender": "Women",
+    "stock": 42,
+    "rating": 4.1
+  },
+  {
+    "id": 41,
+    "name": "Comfortable Wool Dresses",
+    "brand": "H&M",
+    "category": "Dresses",
+    "price": 3214,
+    "discount_price": 2879,
+    "description": "Experience the premium feel of wool with this comfortable wool dresses. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "S",
+      "XL",
+      "XXL"
+    ],
+    "colors": [
+      "Navy",
+      "Red"
+    ],
+    "gender": "Unisex",
+    "stock": 25,
+    "rating": 5.0
+  },
+  {
+    "id": 42,
+    "name": "Stylish Wool T-Shirts",
+    "brand": "Allen Solly",
+    "category": "T-Shirts",
+    "price": 3196,
+    "discount_price": 2335,
+    "description": "A stylish wool t-shirts perfect for any occasion. Crafted by Allen Solly to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "S",
+      "XL",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "Pink",
+      "Beige"
+    ],
+    "gender": "Unisex",
+    "stock": 35,
+    "rating": 3.6
+  },
+  {
+    "id": 43,
+    "name": "Everyday Viscose Tops",
+    "brand": "FabIndia",
+    "category": "Tops",
+    "price": 2887,
+    "discount_price": 2436,
+    "description": "Elevate your wardrobe with this stunning tops from FabIndia. Ideal for unisex's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "S",
+      "XL",
+      "XXL"
+    ],
+    "colors": [
+      "Red",
+      "Black"
+    ],
+    "gender": "Unisex",
+    "stock": 55,
+    "rating": 5.0
+  },
+  {
+    "id": 44,
+    "name": "Premium Blend T-Shirts",
+    "brand": "Allen Solly",
+    "category": "T-Shirts",
+    "price": 7912,
+    "discount_price": null,
+    "description": "A premium blend t-shirts perfect for any occasion. Crafted by Allen Solly to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "S",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "Navy",
+      "Blue",
+      "Black"
+    ],
+    "gender": "Men",
+    "stock": 72,
+    "rating": 4.0
+  },
+  {
+    "id": 45,
+    "name": "Classic Wool Shirts",
+    "brand": "H&M",
+    "category": "Shirts",
+    "price": 7502,
+    "discount_price": 5356,
+    "description": "A classic wool shirts perfect for any occasion. Crafted by H&M to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "S",
+      "XXL"
+    ],
+    "colors": [
+      "Blue",
+      "Beige",
+      "White",
+      "Black"
+    ],
+    "gender": "Women",
+    "stock": 24,
+    "rating": 4.9
+  },
+  {
+    "id": 46,
+    "name": "Casual Polyester Kurtas",
+    "brand": "FabIndia",
+    "category": "Kurtas",
+    "price": 5263,
+    "discount_price": null,
+    "description": "Experience the premium feel of linen with this casual polyester kurtas. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "S",
+      "XS"
+    ],
+    "colors": [
+      "Navy",
+      "Blue",
+      "Black",
+      "Pink"
+    ],
+    "gender": "Women",
+    "stock": 19,
+    "rating": 3.5
+  },
+  {
+    "id": 47,
+    "name": "Modern Denim T-Shirts",
+    "brand": "Mango",
+    "category": "T-Shirts",
+    "price": 6184,
+    "discount_price": 4989,
+    "description": "Elevate your wardrobe with this stunning t-shirts from Mango. Ideal for men's fashion. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "M",
+      "XS"
+    ],
+    "colors": [
+      "Beige",
+      "White",
+      "Red",
+      "Blue"
+    ],
+    "gender": "Men",
+    "stock": 1,
+    "rating": 4.0
+  },
+  {
+    "id": 48,
+    "name": "Classic Linen Jeans",
+    "brand": "FabIndia",
+    "category": "Jeans",
+    "price": 6502,
+    "discount_price": 5723,
+    "description": "Experience the premium feel of cotton with this classic linen jeans. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "S",
+      "XL",
+      "XS"
+    ],
+    "colors": [
+      "Black",
+      "Red",
+      "Green"
+    ],
+    "gender": "Unisex",
+    "stock": 71,
+    "rating": 4.7
+  },
+  {
+    "id": 49,
+    "name": "Comfortable Linen Trousers",
+    "brand": "Zara",
+    "category": "Trousers",
+    "price": 6941,
+    "discount_price": 6050,
+    "description": "Experience the premium feel of blend with this comfortable linen trousers. A must-have for the season. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "M",
+      "XL",
+      "XXL"
+    ],
+    "colors": [
+      "Blue",
+      "Pink",
+      "Green",
+      "White"
+    ],
+    "gender": "Men",
+    "stock": 26,
+    "rating": 4.2
+  },
+  {
+    "id": 50,
+    "name": "Premium Blend Jackets",
+    "brand": "Allen Solly",
+    "category": "Jackets",
+    "price": 1687,
+    "discount_price": 1460,
+    "description": "A premium blend jackets perfect for any occasion. Crafted by Allen Solly to ensure maximum comfort. Features a tailored fit and premium stitching.",
+    "sizes": [
+      "L",
+      "S",
+      "XL",
+      "XS",
+      "XXL"
+    ],
+    "colors": [
+      "Black",
+      "Beige",
+      "Blue"
+    ],
+    "gender": "Women",
+    "stock": 63,
+    "rating": 3.7
+  }
+]

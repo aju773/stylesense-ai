@@ -1,0 +1,45 @@
+# ---- Secrets ----
+# These hold live Gemini / Groq API keys. Never commit.
+.env
+.env.*
+!.env.example
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
+# ---- Databases ----
+*.sqlite3
+*.sqlite3-journal
+*.db
+
+# ---- Node ----
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+
+# ---- Django ----
+staticfiles/
+media/
+
+# ---- Editors / OS ----
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# ---- Logs ----
+*.log
+npm-debug.log*
+pnpm-debug.log*

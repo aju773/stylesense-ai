@@ -1,0 +1,72 @@
+from adrf.views import APIView
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from .models import Conversation
+from .serializers import (
+    ChatMessageSerializer,
+    ConversationSerializer,
+    SendMessageSerializer,
+)
+from .services.chat_service import ChatService
+
+
+class ConversationListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    async def get(self, request):
+        """List user's conversations (newest first)."""
+        conversations = []
+        async for convo in request.user.conversations.order_by("-created_at"):
+            conversations.append(convo)
+        serializer = ConversationSerializer(conversations, many=True)
+        return Response(serializer.data)
+
+
+class ConversationMessagesView(APIView):
+    permission_classes = [IsAuthenticated]
+    throttle_scope = "chat"
+
+    async def get(self, request, conversation_id):
+        """List messages in a conversation (chronological)."""
+        try:
+            conversation = await Conversation.objects.aget(
+                pk=conversation_id,
+                user=request.user,
+            )
+        except Conversation.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        messages = []
+        async for msg in conversation.messages.all():
+            messages.append(msg)
+        serializer = ChatMessageSerializer(messages, many=True)
+        return Response(serializer.data)
+
+    async def post(self, request, conversation_id=None):
+        """Send a message — triggers AI response."""
+        input_serializer = SendMessageSerializer(data=request.data)
+        input_serializer.is_valid(raise_exception=True)
+        message_text = input_serializer.validated_data["message"]
+        convo_id = conversation_id or input_serializer.validated_data.get(
+            "conversation_id"
+        )
+        service = ChatService()
+        try:
+            conversation, ai_message = await service.send_message(
+                user=request.user,
+                conversation_id=convo_id,
+                message_text=message_text,
+            )
+        except Conversation.DoesNotExist:
+            return Response(
+                {"error": "Conversation not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        return Response(
+            {
+                "conversation": ConversationSerializer(conversation).data,
+                "message": ChatMessageSerializer(ai_message).data,
+            },
+            status=status.HTTP_201_CREATED,
+        )
