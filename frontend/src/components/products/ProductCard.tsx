@@ -1,22 +1,6 @@
 import { Link } from "react-router";
 import type { Product } from "../../api/products";
-// Deterministic gradient based on product name — same product always gets the same colors
-const gradients = [
-  "from-[#E8E0D8] to-[#D4C5B5]",
-  "from-[#D8DDE8] to-[#B5BFD4]",
-  "from-[#E8D8DE] to-[#D4B5C0]",
-  "from-[#D8E8E0] to-[#B5D4C5]",
-  "from-[#E0D8E8] to-[#C5B5D4]",
-  "from-[#E8E4D8] to-[#D4CDB5]",
-];
-function getGradient(name: string) {
-  let hash = 0;
-  for (const ch of name) hash = (hash + ch.charCodeAt(0)) % gradients.length;
-  return gradients[hash];
-}
-function formatPrice(price: string) {
-  return `₹${Number(price).toLocaleString("en-IN")}`;
-}
+import { formatPrice, getGradient } from "../../lib/product";
 export default function ProductCard({ product }: { product: Product }) {
   const gradient = getGradient(product.name);
   return (

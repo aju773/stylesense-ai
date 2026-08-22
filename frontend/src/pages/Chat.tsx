@@ -10,23 +10,27 @@ import ChatInput from "../components/chat/ChatInput";
 
 export default function Chat() {
   const [activeConversationId, setActiveConversationId] = useState<number | null>(null);
+  const [historyConversationId, setHistoryConversationId] = useState<number | null>(null);
   const { messages, isStreaming, sendMessage, clearMessages, conversationId } = useChat();
   const queryClient = useQueryClient();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const { data: history } = useQuery({
-    queryKey: ["conversation-messages", activeConversationId],
-    queryFn: () => fetchConversationMessages(activeConversationId!),
-    enabled: activeConversationId !== null,
+    queryKey: ["conversation-messages", historyConversationId],
+    queryFn: () => fetchConversationMessages(historyConversationId!),
+    enabled: historyConversationId !== null,
   });
 
   function handleSelectConversation(id: number | null) {
     clearMessages();
     setActiveConversationId(id);
+    setHistoryConversationId(id);
   }
 
   // Adopt a newly-created conversation's id once the backend assigns one,
-  // and refresh the sidebar so it appears in the list.
+  // and refresh the sidebar so it appears in the list. Deliberately does NOT
+  // touch historyConversationId — that message is already in useChat's live
+  // `messages`, so re-fetching it via REST would duplicate it.
   useEffect(() => {
     if (conversationId && Number(conversationId) !== activeConversationId) {
       setActiveConversationId(Number(conversationId));
@@ -40,7 +44,11 @@ export default function Chat() {
 
   const historyMessages = (history ?? [])
     .filter((m) => m.role !== "system")
-    .map((m) => ({ role: m.role as "user" | "assistant", content: m.content }));
+    .map((m) => ({
+      role: m.role as "user" | "assistant",
+      content: m.content,
+      products: m.products,
+    }));
 
   const lastLive = messages[messages.length - 1];
   const showTyping = isStreaming && lastLive?.role === "assistant" && lastLive.content === "";
@@ -56,7 +64,7 @@ export default function Chat() {
       <section className="flex-1 flex flex-col h-full bg-white">
         <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6">
           {allMessages.map((m, i) => (
-            <ChatBubble key={i} role={m.role} content={m.content} />
+            <ChatBubble key={i} {...m} />
           ))}
           {showTyping && <TypingIndicator />}
           <div ref={bottomRef} />

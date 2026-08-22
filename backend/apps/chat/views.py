@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Conversation
+from .models import ChatMessage, Conversation
 from .serializers import (
     ChatMessageSerializer,
     ConversationSerializer,
@@ -38,7 +38,7 @@ class ConversationMessagesView(APIView):
         except Conversation.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         messages = []
-        async for msg in conversation.messages.all():
+        async for msg in conversation.messages.prefetch_related("products__images"):
             messages.append(msg)
         serializer = ChatMessageSerializer(messages, many=True)
         return Response(serializer.data)
@@ -63,6 +63,11 @@ class ConversationMessagesView(APIView):
                 {"error": "Conversation not found."},
                 status=status.HTTP_404_NOT_FOUND,
             )
+        # Re-fetch with prefetch: serializing `products` lazily would hit the DB
+        # from async context and raise SynchronousOnlyOperation.
+        ai_message = await ChatMessage.objects.prefetch_related(
+            "products__images",
+        ).aget(pk=ai_message.pk)
         return Response(
             {
                 "conversation": ConversationSerializer(conversation).data,

@@ -1,9 +1,18 @@
 // src/components/chat/ChatBubble.tsx
 import ReactMarkdown from "react-markdown";
 import type { ChatMessage } from "../../hooks/useChat";
+import ChatProductStrip from "./ChatProductStrip";
 
-export default function ChatBubble({ role, content }: ChatMessage) {
+// The AI cites catalog products with [[product:12]] markers. They are a
+// machine-readable contract, not prose — the backend turns them into the card
+// payload, and they must never reach the reader's eyes. Stripped here rather
+// than server-side so the markers survive in ChatMessage.content, which is what
+// lets history rebuild card ordering later.
+const MARKER_RE = /\s*\[\[product:\d+\]\]/g;
+
+export default function ChatBubble({ role, content, products }: ChatMessage) {
   const isUser = role === "user";
+  const displayContent = isUser ? content : content.replace(MARKER_RE, "");
   return (
     <div className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}>
       {!isUser && (
@@ -22,7 +31,10 @@ export default function ChatBubble({ role, content }: ChatMessage) {
           <p className="text-sm leading-relaxed">{content}</p>
         ) : (
           <div className="text-sm leading-relaxed">
-            <ReactMarkdown>{content}</ReactMarkdown>
+            <ReactMarkdown>{displayContent}</ReactMarkdown>
+            {products && products.length > 0 && (
+              <ChatProductStrip products={products} />
+            )}
           </div>
         )}
       </div>

@@ -33,6 +33,9 @@ class Command(BaseCommand):
                 self.stdout.flush()
             elif event["event"] == "stream_start":
                 self.stdout.write(f"[stream_start conversation_id={event['conversation_id']}]\n")
+            elif event["event"] == "products":
+                names = ", ".join(p["name"] for p in event["products"])
+                self.stdout.write(f"\n[products {names}]\n")
             elif event["event"] == "stream_end":
                     self.stdout.write(f"\n[stream_end message_id={event['message_id']}]\n")
 

@@ -4,8 +4,8 @@
 
 **Blocked by:** 04 — Product Detail, 06 — Real-time AI Chat
 
-**Status:** ready-for-agent
+**Status:** done — sliced into 7.1–7.4
 
-- [ ] Save chat messages to DB to persist history
-- [ ] Sidebar UI for past conversations
-- [ ] Support rendering inline product cards inside AI chat bubble
+- [x] Save chat messages to DB to persist history
+- [x] Sidebar UI for past conversations
+- [x] Support rendering inline product cards inside AI chat bubble

@@ -1,15 +1,12 @@
 # StyleSense AI
 
 ## Rules
-- **Mentor only.** Do NOT write code or run setup commands. Explain concepts, give snippets in chat, let the human type.
-  - **Exception: deployment & infrastructure.** Dockerfile, `render.yaml`, CI workflows, `.gitignore`, production settings, and host configuration are written directly — this is plumbing, not the app-building being learned. Application code (models, views, services, components, hooks) stays mentor-only.
-- **Pacing.** One concept at a time. Teach the WHY (pain point) and Evolution (raw → framework).
-- **Wait.** Don't move to the next step until the human confirms.
-- **Modern Tooling Check.** Before teaching a setup or command, verify modern standard methods (e.g., uv over pip/venv) and align with user preferences.
+- **Implement directly.** Write the code, run the commands. No mentor/teaching mode.
+- **Modern Tooling Check.** Before using a setup or command, verify modern standard methods (e.g., uv over pip/venv) and align with user preferences.
 
 ## Workflow (Per Sub-ticket)
-1. `/sensei` — deep teaching (verbose)
-2. `/sensei` + `/caveman` — terse guidance while human types
+1. Implement
+2. Verify it runs
 3. Update `progress.md` when done
 
 ## Project Layout

@@ -1,10 +1,12 @@
 // src/hooks/useChat.ts
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import type { ChatProductCard } from "../api/chat";
 
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
+  products?: ChatProductCard[];
 }
 
 // Derived from the current page rather than hardcoded, so the same build works
@@ -66,6 +68,18 @@ export function useChat() {
               next[next.length - 1] = {
                 ...next[next.length - 1],
                 content: next[next.length - 1].content + data.content,
+              };
+              return next;
+            });
+            break;
+          case "products":
+            // Arrives just before stream_end, once the backend has resolved the
+            // [[product:id]] markers in the finished reply to real catalog rows.
+            setMessages((prev) => {
+              const next = [...prev];
+              next[next.length - 1] = {
+                ...next[next.length - 1],
+                products: data.products,
               };
               return next;
             });

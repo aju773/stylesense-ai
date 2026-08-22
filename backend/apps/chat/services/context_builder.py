@@ -37,7 +37,7 @@ class ContextBuilder:
         lines = ["Here are relevant products from our catalog:\n"]
         async for product in products:
             lines.append(
-                f"- {product.name} | Brand: {product.brand} | ₹{product.price} | "
+                f"- [id:{product.id}] {product.name} | Brand: {product.brand} | ₹{product.price} | "
                 f"Category: {product.category.name} | "
                 f"Colors: {', '.join(product.colors)} | "
                 f"Sizes: {', '.join(product.sizes)} | "

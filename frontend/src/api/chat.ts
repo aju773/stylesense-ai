@@ -9,12 +9,23 @@ export interface Conversation {
   updated_at: string;
 }
 
+export interface ChatProductCard {
+  id: number;
+  name: string;
+  slug: string;
+  brand: string;
+  price: string;
+  discount_price: string | null;
+  image_url: string | null;
+}
+
 export interface ChatMessageRecord {
   id: number;
   role: "user" | "assistant" | "system";
   content: string;
   ai_provider_used: string | null;
   created_at: string;
+  products: ChatProductCard[];
 }
 
 export async function fetchConversations(): Promise<Conversation[]> {

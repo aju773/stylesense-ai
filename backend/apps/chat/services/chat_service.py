@@ -3,6 +3,9 @@ import logging
 from apps.chat.models import ChatMessage, Conversation
 from apps.chat.services.context_builder import ContextBuilder
 from apps.chat.services.factory import get_ai_orchestrator
+from apps.chat.services.product_markers import extract_product_ids
+from apps.products.models import Product
+from apps.products.serializers import ProductCardSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +15,13 @@ Your behavior:
 - When the catalog doesn't have a good match, give general fashion advice honestly — don't force catalog items that don't fit.
 - Be conversational, warm, and concise. No walls of text.
 - If the user asks something completely unrelated to fashion, politely redirect.
+
+Product citation rules (strict):
+- Each catalog entry below starts with its id, like [id:12]. When you mention a catalog product, write its name followed immediately by the marker [[product:12]] using that exact id.
+- Only use ids that appear in the catalog below. Never invent an id.
+- Never recommend a specific catalog product without its marker.
+- Cite each product at most once per reply.
+- The markers are invisible formatting. Never mention them, explain them, or show ids to the user.
 {product_context}"""
 HISTORY_LIMIT = 20
 
@@ -22,6 +32,29 @@ class ChatService:
     def __init__(self):
         self.context_builder = ContextBuilder()
         self.orchestrator = get_ai_orchestrator()
+
+    async def _attach_cited_products(self, ai_message, content) -> list[dict]:
+        """Link the products the AI cited to the saved message.
+
+        Ids come from a prompt-level contract the model can break, so they are
+        validated against the database here — unknown ids are dropped silently.
+        Returns the serialized cards, ordered by first mention in the reply.
+        """
+        product_ids = extract_product_ids(content)
+        if not product_ids:
+            return []
+        products = []
+        async for product in Product.objects.filter(
+            pk__in=product_ids,
+            is_active=True,
+        ).prefetch_related("images"):
+            products.append(product)
+        if not products:
+            return []
+        position = {pk: index for index, pk in enumerate(product_ids)}
+        products.sort(key=lambda product: position[product.pk])
+        await ai_message.products.aset(products)
+        return ProductCardSerializer(products, many=True).data
 
     async def send_message(self, user, conversation_id, message_text):
         """Process a user message and return the AI response.
@@ -67,6 +100,8 @@ class ChatService:
             role="assistant",
             content=ai_response,
         )
+        # 7b. Link cited catalog products
+        await self._attach_cited_products(ai_message, ai_response)
         # 8. Auto-generate title from first message
         if not conversation.title:
             conversation.title = message_text[:50]
@@ -121,6 +156,12 @@ class ChatService:
             role="assistant",
             content=ai_content,
         )
+        # 7b. Link cited catalog products and ship the cards to the client.
+        # Serialized here rather than in the consumer so the WebSocket and the
+        # REST history endpoint hand the frontend an identical card shape.
+        products = await self._attach_cited_products(ai_message, ai_content)
+        if products:
+            yield {"event": "products", "products": products}
         # 8. Auto-generate title from first message
         if not conversation.title:
             conversation.title = message_text[:50]

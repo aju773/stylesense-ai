@@ -31,6 +31,12 @@ class ChatMessage(models.Model):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     content = models.TextField()
     ai_provider_used = models.CharField(max_length=50, blank=True, null=True)
+    products = models.ManyToManyField(
+        "products.Product",
+        blank=True,
+        related_name="chat_messages",
+        help_text="Catalog products this message cites via [[product:id]] markers.",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

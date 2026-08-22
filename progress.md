@@ -1,8 +1,7 @@
 # Progress
 
 ## Current
-- Epic 06: Real-time AI Chat (WebSocket Streaming)
-- Sub-ticket 6.4: React Chat UI + WebSocket Hook
+- Epic 07 complete. Next: Epic 08 — Shopping Cart (not yet sliced)
 
 ## Completed
 - Sub-ticket 1.1: Docker DBs
@@ -31,6 +30,11 @@
 - Sub-ticket 6.1: Django Channels + WebSocket Plumbing
 - Sub-ticket 6.2: Streaming Provider + ChatService (fixed indentation bug, unified `send_message_stream` event envelope, verified via `test_stream`)
 - Sub-ticket 6.3: Wire Streaming into WebSocket Consumer (real `chat.message` handling, background-task + send-lock streaming, working concurrency guard and rate limiting, verified end-to-end)
+- Sub-ticket 6.4: React Chat UI + WebSocket Hook (useChat hook w/ reconnect+backoff, sidebar, bubbles, markdown, typing indicator, input, logout wiring — verified in browser, fixed dup-message bug from REST history race)
+- Sub-ticket 7.1: Product Markers in the AI Contract (ids in vector-search context, `[[product:id]]` citation rules in `SYSTEM_PROMPT`, compliance verified on both Gemini and Groq)
+- Sub-ticket 7.2: Persist Product References (`ChatMessage.products` M2M, `product_markers.py` parser, DB-validated linking, `ProductCardSerializer` nested in chat history)
+- Sub-ticket 7.3: Ship Product Cards Over the WebSocket (`products` event before `stream_end`; consumer forwarded it unchanged)
+- Sub-ticket 7.4: Render Inline Product Cards (`ChatProductStrip`, marker stripping in `ChatBubble`, shared `lib/product.ts` helpers — verified in browser on both the live stream and REST history paths)
 
 ## Recent Decisions
 - Use `uv` for modern Python package management
@@ -52,4 +56,9 @@
 - `CHANNEL_LAYERS` uses `channels_redis.pubsub.RedisPubSubChannelLayer`, not the default `RedisChannelLayer` — ChatConsumer never uses group_send/group_add, so pub/sub's simpler path is sufficient
 - Pinned `redis<5` in `pyproject.toml` — redis-py 8.x raises `TimeoutError` on routine poll timeouts instead of returning `None`, which crashes channels_redis 4.3.0's listener loops (upstream: django/channels_redis#408)
 - `ChatConsumer.receive_json` spawns streaming via `asyncio.create_task` (not a direct `await`) so the dispatch loop can pick up the next message while one is in flight — required for the `is_streaming` concurrency guard to be reachable at all, since Channels serializes `receive_json` calls otherwise. All `send_json` calls go through an `asyncio.Lock` since ASGI forbids concurrent `send()` calls on one connection
-
+- Structured product data escapes the text stream via inline `[[product:id]]` markers, not tool calling or JSON mode. Tool calling would fork the provider interface (Gemini `function_declarations` vs Groq OpenAI `tools`) and break `AsyncGenerator[str]`; JSON mode would kill token streaming entirely. Markers are just text, so every provider "supports" them and the orchestrator fallback needs zero changes
+- Markers stay in `ChatMessage.content` and are stripped at render time in `ChatBubble` — keeping them server-side is what lets history rebuild card ordering by first mention
+- Marker ids are always validated against the DB before linking, which drops hallucinated ids for free — the prompt contract is best-effort, the persistence layer is not
+- Product cards are serialized in `ChatService`, not in the consumer, so the WebSocket `products` event and the REST history endpoint return an identical card shape
+- Groq model changed to `openai/gpt-oss-120b` — `llama-3.3-70b-versatile` now 404s on this account, so the fallback provider was silently dead before 7.1
+- Mentor-only/sensei mode removed from `CLAUDE.md`; global `/caveman` output rule added at `~/.claude/CLAUDE.md`

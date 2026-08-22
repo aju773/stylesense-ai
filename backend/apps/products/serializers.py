@@ -59,3 +59,29 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "category",
             "images",
         )
+
+
+class ProductCardSerializer(serializers.ModelSerializer):
+    """Compact product payload for inline AI chat cards."""
+
+    image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = (
+            "id",
+            "name",
+            "slug",
+            "brand",
+            "price",
+            "discount_price",
+            "image_url",
+        )
+
+    def get_image_url(self, obj) -> str | None:
+        # Uses the prefetched `images` list — no per-card query.
+        images = list(obj.images.all())
+        if not images:
+            return None
+        primary = next((img for img in images if img.is_primary), images[0])
+        return primary.image_url
