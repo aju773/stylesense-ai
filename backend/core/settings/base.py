@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "django_filters",
     "django.contrib.postgres",
     "apps.chat",
+    "apps.cart",
     "channels",
 ]
 

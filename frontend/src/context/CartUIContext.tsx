@@ -1,0 +1,39 @@
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import type { ReactNode } from "react";
+
+/**
+ * Purely presentational cart state: whether the drawer is showing.
+ *
+ * Cart *data* is server state and lives in TanStack Query (`useCart`). This
+ * context deliberately holds nothing else, so there is exactly one place the
+ * bag's contents can come from.
+ */
+interface CartUIContextType {
+  isDrawerOpen: boolean;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+}
+
+const CartUIContext = createContext<CartUIContextType | null>(null);
+
+export function CartUIProvider({ children }: { children: ReactNode }) {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
+
+  const value = useMemo(
+    () => ({ isDrawerOpen, openDrawer, closeDrawer }),
+    [isDrawerOpen, openDrawer, closeDrawer]
+  );
+
+  return <CartUIContext.Provider value={value}>{children}</CartUIContext.Provider>;
+}
+
+export function useCartUI(): CartUIContextType {
+  const context = useContext(CartUIContext);
+  if (context === null) {
+    throw new Error("useCartUI must be used within a CartUIProvider");
+  }
+  return context;
+}

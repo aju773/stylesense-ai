@@ -1,7 +1,7 @@
 # Progress
 
 ## Current
-- Epic 07 complete. Next: Epic 08 — Shopping Cart (not yet sliced)
+- Epic 08 complete (8.1–8.4). Next: Epic 09 — Wishlist
 
 ## Completed
 - Sub-ticket 1.1: Docker DBs
@@ -35,6 +35,10 @@
 - Sub-ticket 7.2: Persist Product References (`ChatMessage.products` M2M, `product_markers.py` parser, DB-validated linking, `ProductCardSerializer` nested in chat history)
 - Sub-ticket 7.3: Ship Product Cards Over the WebSocket (`products` event before `stream_end`; consumer forwarded it unchanged)
 - Sub-ticket 7.4: Render Inline Product Cards (`ChatProductStrip`, marker stripping in `ChatBubble`, shared `lib/product.ts` helpers — verified in browser on both the live stream and REST history paths)
+- Sub-ticket 8.1: Cart Models (`apps.cart`, one-per-user `Cart`, `CartItem` unique on `(cart, product, size, color)`, `quantity >= 1` check constraint, admin, migration)
+- Sub-ticket 8.2: Cart REST API (service layer owns all money math and business rules; GET/DELETE `/api/cart/`, POST/PATCH/DELETE on items; every mutation returns the whole recomputed bag; ownership enforced by scoping the lookup, verified with a second user)
+- Sub-ticket 8.3: Cart Data Layer (TanStack Query with `onMutate` optimistic updates + snapshot rollback, `CartUIContext` for drawer state, cart cache purged on auth change — Redux deliberately not used, see decisions)
+- Sub-ticket 8.4: Cart Drawer + Cart Page + Site Header (first global chrome in the app; `AppLayout` layout route, live badge, `ProductDetail` "Add to Bag" wired — rollback verified in the browser by deleting the row behind the UI)
 
 ## Recent Decisions
 - Use `uv` for modern Python package management
@@ -62,3 +66,11 @@
 - Product cards are serialized in `ChatService`, not in the consumer, so the WebSocket `products` event and the REST history endpoint return an identical card shape
 - Groq model changed to `openai/gpt-oss-120b` — `llama-3.3-70b-versatile` now 404s on this account, so the fallback provider was silently dead before 7.1
 - Mentor-only/sensei mode removed from `CLAUDE.md`; global `/caveman` output rule added at `~/.claude/CLAUDE.md`
+- Cart is authenticated-only. A guest cart would require a session-keyed cart plus merge-on-login with conflict rules for duplicate `(product, size, color)` lines and cleanup of orphaned rows — a whole sub-ticket of work for a demo project where every interesting flow already needs an account
+- `CartItem.size`/`color` are blank-not-null. Postgres treats `NULL != NULL`, so nullable columns would let the `(cart, product, size, color)` unique constraint pass for two "no size" lines of the same product — exactly the duplicate the constraint exists to prevent
+- Cart lines store no price snapshot. The bag always reflects live catalog pricing; snapshotting belongs on the order at checkout (epic 10), or a cart quietly bills yesterday's price after a markdown
+- **Cart uses TanStack Query, not Redux — a deliberate departure from ticket 08.** The cart is server-owned state (the server computes every total), and Query already has the exact optimistic primitive needed: `onMutate` applies the change, the snapshot in its context rolls it back on error. One shared `["cart"]` key gives the header badge, drawer, and page the same data with zero synchronisation code — which is what the "global client state" argument for Redux was meant to buy. Adding RTK would have put a second server-state cache beside Query with its own invalidation rules and real drift risk. Drawer open/closed is genuine client state and lives in a small `CartUIContext`
+- Every mutating cart endpoint returns the **entire** recomputed cart, not just the touched row. The client replaces its state wholesale and never has to recompute money locally — the optimistic `estimateTotals` is a throwaway estimate for one frame, overwritten by the server's numbers on success
+- Cart item routes scope their lookup by `cart__user=request.user` instead of fetching then checking ownership. Another user's item id is then indistinguishable from a nonexistent one — 404 either way, leaking nothing about what other carts hold
+- `AuthContext` purges the `["cart"]` query cache on login, register, and logout. Without it, logging out and back in as someone else shows the previous user's bag from cache until the refetch lands
+- Epic 08 built the app's first header/nav (`SiteHeader` + `AppLayout` layout route). There was no global chrome anywhere and `Products.tsx` had no navigation links at all, so the cart badge had nowhere to live; epics 09/10 need it too

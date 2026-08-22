@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useLocation, useNavigate } from "react-router";
 import { useProduct } from "../hooks/useProduct";
+import { useAuth } from "../context/AuthContext";
+import { useCartUI } from "../context/CartUIContext";
+import { useAddToCart } from "../hooks/useCart";
 import ImageGallery from "../components/products/ImageGallery";
 
 function formatPrice(price: string) {
@@ -10,9 +13,15 @@ function formatPrice(price: string) {
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { data: product, isLoading, isError } = useProduct(slug!);
+  const { isAuthenticated } = useAuth();
+  const { openDrawer } = useCartUI();
+  const addToCart = useAddToCart();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [addError, setAddError] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -29,6 +38,53 @@ export default function ProductDetail() {
       </div>
     );
   }
+
+  // Arrow const, not a declaration: only this form lets TypeScript keep the
+  // `product` narrowing from the guards above, so no non-null assertions.
+  const handleAddToBag = () => {
+    // Carts are authenticated-only, so an anonymous add is a login prompt.
+    // `from` brings them back to this page after they sign in.
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: location.pathname } });
+      return;
+    }
+    if (product.sizes.length > 0 && !selectedSize) {
+      setAddError("Please select a size.");
+      return;
+    }
+    if (product.colors.length > 0 && !selectedColor) {
+      setAddError("Please select a color.");
+      return;
+    }
+    setAddError(null);
+    addToCart.mutate(
+      {
+        product_id: product.id,
+        size: selectedSize ?? "",
+        color: selectedColor ?? "",
+        quantity: 1,
+        // Lets the drawer show the line before the round-trip finishes.
+        optimisticProduct: {
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          brand: product.brand,
+          price: product.price,
+          discount_price: product.discount_price,
+          image_url: product.images?.[0]?.image_url ?? null,
+        },
+      },
+      {
+        onSuccess: () => openDrawer(),
+        onError: (error) => {
+          const detail = (
+            error as { response?: { data?: { detail?: string } } }
+          ).response?.data?.detail;
+          setAddError(detail ?? "Couldn't add to bag. Please try again.");
+        },
+      }
+    );
+  };
 
   const hasDiscount = product.discount_price != null;
   const discountPercent = hasDiscount
@@ -158,9 +214,19 @@ export default function ProductDetail() {
 
             {/* Action buttons */}
             <div className="flex flex-col gap-3 mt-2">
-              <button className="h-[52px] bg-[#1A1A1A] text-white text-xs font-semibold tracking-[0.15em] uppercase hover:bg-[#333] transition-colors">
-                Add to Bag
+              <button
+                type="button"
+                onClick={handleAddToBag}
+                disabled={product.stock === 0 || addToCart.isPending}
+                className="h-[52px] bg-[#1A1A1A] text-white text-xs font-semibold tracking-[0.15em] uppercase hover:bg-[#333] transition-colors disabled:opacity-40 disabled:hover:bg-[#1A1A1A]"
+              >
+                {addToCart.isPending ? "Adding…" : "Add to Bag"}
               </button>
+              {addError && (
+                <p role="alert" className="text-xs text-[#D64045] -mt-1">
+                  {addError}
+                </p>
+              )}
               <button className="h-[52px] border border-[#1A1A1A] text-[#1A1A1A] text-xs font-semibold tracking-[0.15em] uppercase hover:bg-[#F9F7F4] transition-colors">
                 ♡ Add to Wishlist
               </button>
