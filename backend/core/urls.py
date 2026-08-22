@@ -28,6 +28,7 @@ urlpatterns = [
     path("api/chat/", include("apps.chat.urls")),
     path("api/cart/", include("apps.cart.urls")),
     path("api/orders/", include("apps.orders.urls")),
+    path("api/wishlist/", include("apps.wishlist.urls")),
     # Catch-all for React Router. MUST stay last: it matches everything, so any
     # pattern below it would be unreachable. Paths handled before Django's URL
     # resolver is even consulted (/static/, and the built assets served by

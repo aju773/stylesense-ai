@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "apps.chat",
     "apps.cart",
     "apps.orders",
+    "apps.wishlist",
     "channels",
 ]
 

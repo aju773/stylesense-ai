@@ -35,9 +35,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
   // Per-user server state must not outlive the session that fetched it.
   // Without this, logging out and back in as someone else shows the previous
-  // user's bag from cache until the refetch lands.
+  // user's bag and saved products from cache until the refetch lands.
   const purgeUserCaches = useCallback(() => {
     queryClient.removeQueries({ queryKey: ["cart"] });
+    queryClient.removeQueries({ queryKey: ["wishlist"] });
   }, [queryClient]);
 
   const login = useCallback(

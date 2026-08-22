@@ -52,13 +52,17 @@ function NavLinks({
           {link.label}
         </NavLink>
       ))}
-      {/* Orders is the only account page that exists yet — Wishlist and Profile
-          are still stubs. A single link is honest; an account menu can come
-          when there is more than one real thing to put in it. */}
+      {/* Two real account destinations now that the wishlist exists; Profile is
+          still a stub, so a dropdown would still be mostly dead ends. */}
       {isAuthenticated && (
-        <NavLink to="/orders" className={navClass}>
-          Orders
-        </NavLink>
+        <>
+          <NavLink to="/wishlist" className={navClass}>
+            Wishlist
+          </NavLink>
+          <NavLink to="/orders" className={navClass}>
+            Orders
+          </NavLink>
+        </>
       )}
       <NavLink
         to="/chat"

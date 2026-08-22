@@ -11,13 +11,11 @@ import Chat from "./pages/Chat";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
+import Wishlist from "./pages/Wishlist";
 
 // Placeholder pages — we'll build real ones in later tickets
 function Home() {
   return <h1>Home</h1>;
-}
-function Wishlist() {
-  return <h1>Wishlist (Protected)</h1>;
 }
 function Profile() {
   return <h1>Profile (Protected)</h1>;

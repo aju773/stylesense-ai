@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { useCartUI } from "../context/CartUIContext";
 import { useAddToCart } from "../hooks/useCart";
 import ImageGallery from "../components/products/ImageGallery";
+import SaveButton from "../components/wishlist/SaveButton";
 
 function formatPrice(price: string) {
   return `₹${Number(price).toLocaleString("en-IN")}`;
@@ -227,9 +228,18 @@ export default function ProductDetail() {
                   {addError}
                 </p>
               )}
-              <button className="h-[52px] border border-[#1A1A1A] text-[#1A1A1A] text-xs font-semibold tracking-[0.15em] uppercase hover:bg-[#F9F7F4] transition-colors">
-                ♡ Add to Wishlist
-              </button>
+              <SaveButton
+                variant="wide"
+                product={{
+                  id: product.id,
+                  name: product.name,
+                  slug: product.slug,
+                  brand: product.brand,
+                  price: product.price,
+                  discount_price: product.discount_price,
+                  image_url: product.images?.[0]?.image_url ?? null,
+                }}
+              />
             </div>
 
             <div className="w-full h-px bg-[#E5E5E5]" />
