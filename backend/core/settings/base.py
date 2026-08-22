@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "apps.chat",
     "apps.cart",
+    "apps.orders",
     "channels",
 ]
 
@@ -193,6 +194,9 @@ REST_FRAMEWORK = {
         # can mint unlimited accounts and defeat any per-user AI quota by
         # simply making new users.
         "register": "5/hour",
+        # Order placement takes row locks on the catalog and calls a payment
+        # gateway. A client firing it in a loop holds those locks.
+        "orders": "10/min",
     },
 }
 
@@ -201,6 +205,11 @@ REST_FRAMEWORK = {
 # fall to multi-account abuse; this is the backstop that actually bounds spend.
 # When it trips, chat degrades to a polite message instead of draining quota.
 AI_DAILY_CALL_LIMIT = env.int("AI_DAILY_CALL_LIMIT", default=200)
+
+# There is no real payment processor. The mock gateway sleeps for this long
+# before answering so the checkout UI has a genuine pending state to render
+# and the rollback path is observable; set it to 0 in tests.
+MOCK_PAYMENT_LATENCY_SECONDS = env.float("MOCK_PAYMENT_LATENCY_SECONDS", default=1.2)
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),

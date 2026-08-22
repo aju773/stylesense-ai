@@ -15,7 +15,7 @@ import { useAuth } from "../context/AuthContext";
 
 export const CART_QUERY_KEY = ["cart"] as const;
 
-const EMPTY_CART: Cart = {
+export const EMPTY_CART: Cart = {
   items: [],
   totals: {
     subtotal: "0.00",

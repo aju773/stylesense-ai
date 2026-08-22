@@ -110,11 +110,18 @@ export default function CartDrawer() {
               </p>
             )}
             <Link
-              to="/cart"
+              to="/checkout"
               onClick={closeDrawer}
               className="w-full h-[52px] bg-[#1A1A1A] text-white text-xs font-semibold tracking-[0.15em] uppercase hover:bg-[#333] transition-colors flex items-center justify-center"
             >
-              View Bag &amp; Checkout
+              Checkout
+            </Link>
+            <Link
+              to="/cart"
+              onClick={closeDrawer}
+              className="text-center text-xs font-semibold tracking-[0.15em] uppercase text-[#777] hover:text-[#1A1A1A] transition-colors"
+            >
+              View Bag
             </Link>
           </footer>
         )}

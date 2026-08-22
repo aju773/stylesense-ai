@@ -1,10 +1,11 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import CartLineItem from "../components/cart/CartLineItem";
 import CartSummary from "../components/cart/CartSummary";
 import { useCart } from "../hooks/useCart";
 
 export default function Cart() {
   const { data: cart, isLoading, isError } = useCart();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -66,7 +67,7 @@ export default function Cart() {
 
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-24">
-            <CartSummary totals={totals} />
+            <CartSummary totals={totals} onCheckout={() => navigate("/checkout")} />
           </div>
         </div>
       </div>

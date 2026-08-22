@@ -1,7 +1,7 @@
 # Progress
 
 ## Current
-- Epic 08 complete (8.1–8.4). Next: Epic 09 — Wishlist
+- Epic 10 complete (10.1–10.4). Next: Epic 09 — Wishlist (deferred; epic 10 was taken first).
 
 ## Completed
 - Sub-ticket 1.1: Docker DBs
@@ -39,6 +39,10 @@
 - Sub-ticket 8.2: Cart REST API (service layer owns all money math and business rules; GET/DELETE `/api/cart/`, POST/PATCH/DELETE on items; every mutation returns the whole recomputed bag; ownership enforced by scoping the lookup, verified with a second user)
 - Sub-ticket 8.3: Cart Data Layer (TanStack Query with `onMutate` optimistic updates + snapshot rollback, `CartUIContext` for drawer state, cart cache purged on auth change — Redux deliberately not used, see decisions)
 - Sub-ticket 8.4: Cart Drawer + Cart Page + Site Header (first global chrome in the app; `AppLayout` layout route, live badge, `ProductDetail` "Add to Bag" wired — rollback verified in the browser by deleting the row behind the UI)
+- Sub-ticket 10.1: Order Models (`apps.orders`, `Order` with frozen totals + `order_number` + status lifecycle, `OrderItem` with `SET_NULL` product FK and a full product/price snapshot, read-only admin, migration — snapshot survival verified by deleting the product behind a placed line)
+- Sub-ticket 10.2: Order Placement + Orders API (one transaction: `select_for_update()` on products in pk order, per-product stock re-validation, `F()` decrement, mock gateway charge, order write, cart cleared; `EmptyCart` 400 / `StockConflict` 409 with every failing line / `PaymentFailed` 402; list + detail scoped by user — **lock proven by a two-thread race, plus a no-lock control run that crashes**)
+- Sub-ticket 10.3: Checkout Flow UI (`/checkout` route, mock card block with an injectable decline toggle, spinner over the gateway pause, confirmation state; `CartSummary`'s dead `onCheckout` prop finally wired from both the cart page and the drawer; cart cache cleared on success — decline and 409 rollbacks both verified in the browser against live stock)
+- Sub-ticket 10.4: Order History Page (`/orders` accordion per the design — status pill, 4-step tracker, snapshot line items with per-line savings; `advance_orders` management command to move orders along the lifecycle; authenticated-only Orders link in `SiteHeader`, the app's first account-area nav — verified across all four statuses and against a second user)
 
 ## Recent Decisions
 - Use `uv` for modern Python package management
@@ -73,4 +77,20 @@
 - Every mutating cart endpoint returns the **entire** recomputed cart, not just the touched row. The client replaces its state wholesale and never has to recompute money locally — the optimistic `estimateTotals` is a throwaway estimate for one frame, overwritten by the server's numbers on success
 - Cart item routes scope their lookup by `cart__user=request.user` instead of fetching then checking ownership. Another user's item id is then indistinguishable from a nonexistent one — 404 either way, leaking nothing about what other carts hold
 - `AuthContext` purges the `["cart"]` query cache on login, register, and logout. Without it, logging out and back in as someone else shows the previous user's bag from cache until the refetch lands
+- Order placement is one transaction with the payment charge *inside* it. A real shop would reserve stock, charge outside the lock, and compensate on failure — that buys throughput at the price of a compensating path that can itself fail. Holding the locks across the gateway call is the deliberate trade here: the rollback is genuinely atomic, and that is the thing worth demonstrating
+- Partial stock failure aborts the whole order rather than placing what it can. The 409 carries every failing line (product, variant, requested, available, and `insufficient_stock` vs `unavailable`), so the UI can annotate all the offending rows at once instead of the customer rediscovering them one at a time
+- Stock is validated per *product*, summed across lines — the same shirt in M and L are two lines drawing on one pool, and validating them independently would sell two units of a one-unit product
+- Product rows are locked in ascending pk order. Two orders sharing products would deadlock if they took the same rows in different sequences
+- The mock gateway declines on demand (`tok_decline` sentinel) and sleeps ~1.2s. An always-succeeds stub would leave the stock-rollback path — the only genuinely interesting engineering in this epic — permanently unexercised and undemoable
+- No `pending`/`failed` order status: neither is observable. The charge happens inside the placement transaction, so a decline rolls back and leaves no row to mark. An order exists only if it was paid for
+- What `select_for_update()` actually buys, measured: without it, two concurrent placements both validate against stale stock and the second dies on Postgres's own `CHECK (stock >= 0)` — a 500. The column constraint is what prevents the oversell; the lock is what turns the crash into a correct 409
+- Order placement returns 409, not 400, on a stock conflict — the request was well-formed and was valid when the customer sent it; the world moved underneath it
+- `OrderItem.product` is `SET_NULL` with the product's name/brand/slug/image snapshotted alongside the price, so deleting a product empties the link without breaking order history. `Order.user` stays `CASCADE` to keep account deletion working, which a real shop would not do — orders are accounting records with a retention period
+- Order placement gets **no** optimistic update, unlike every cart mutation. Cart changes are locally predictable and rollback-able; placement is not — success depends on stock the client hasn't seen and a payment that hasn't happened. Rendering a confirmed order before the server confirms it would be rendering a purchase that may not exist
+- The three placement failures render as three different UIs because they are three different events: a decline is retryable on the spot, a 409 stock conflict sends the customer back to edit their bag, an empty bag redirects to `/cart`. `parsePlaceOrderError` maps status → a discriminated union so components switch on `kind`, never on status codes
+- `usePlaceOrder` invalidates cart *and* products on **error** as well as success — a 409 means the catalog moved underneath the bag, so the retry should be against what is actually there
+- No shipping address anywhere in epic 10. The orders design shows a Delivery Address block, but collecting one means an Address model, a form, and validation that demonstrate nothing the cart and auth forms don't already — so the block is dropped rather than faked
+- Order status advances by a management command (`advance_orders`), not a timer or a derived value. There is no warehouse and no carrier webhook, so nothing would move an order past Processing on its own and the history page would show a column of identical rows. A derived-from-elapsed-time status was rejected: it is a value the DB doesn't hold, and it can't be filtered or queried
+- `SiteHeader` gets a plain authenticated-only `Orders` link, not an account menu. Orders is the only account page that exists — Wishlist and Profile are still `<h1>` stubs, so a dropdown would be one real destination and two dead ones. That is the same mistake as the dead Checkout button epic 10 inherited; the menu belongs in whichever epic makes those pages real
+- The orders design's **Reorder Items** and **Need Help?** buttons are omitted rather than rendered inert. Shipping controls with nothing behind them is precisely the debt 10.3 had to pay off
 - Epic 08 built the app's first header/nav (`SiteHeader` + `AppLayout` layout route). There was no global chrome anywhere and `Products.tsx` had no navigation links at all, so the cart badge had nowhere to live; epics 09/10 need it too

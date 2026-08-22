@@ -38,7 +38,13 @@ const navClass = ({ isActive }: { isActive: boolean }) =>
  * it on mobile — where there is no space for it inline, and hiding it outright
  * would leave small screens with no navigation at all.
  */
-function NavLinks({ className }: { className: string }) {
+function NavLinks({
+  className,
+  isAuthenticated,
+}: {
+  className: string;
+  isAuthenticated: boolean;
+}) {
   return (
     <nav className={className}>
       {NAV_LINKS.map((link) => (
@@ -46,6 +52,14 @@ function NavLinks({ className }: { className: string }) {
           {link.label}
         </NavLink>
       ))}
+      {/* Orders is the only account page that exists yet — Wishlist and Profile
+          are still stubs. A single link is honest; an account menu can come
+          when there is more than one real thing to put in it. */}
+      {isAuthenticated && (
+        <NavLink to="/orders" className={navClass}>
+          Orders
+        </NavLink>
+      )}
       <NavLink
         to="/chat"
         className={({ isActive }) =>
@@ -76,7 +90,10 @@ export default function SiteHeader() {
             StyleSense AI
           </Link>
 
-          <NavLinks className="hidden sm:flex items-center gap-8" />
+          <NavLinks
+            className="hidden sm:flex items-center gap-8"
+            isAuthenticated={isAuthenticated}
+          />
 
           <div className="flex items-center gap-4">
             <button
@@ -112,7 +129,10 @@ export default function SiteHeader() {
           </div>
         </div>
 
-        <NavLinks className="sm:hidden flex items-center justify-center gap-6 h-11 border-t border-[#E5E5E5]" />
+        <NavLinks
+          className="sm:hidden flex items-center justify-center gap-6 h-11 border-t border-[#E5E5E5]"
+          isAuthenticated={isAuthenticated}
+        />
       </div>
     </header>
   );

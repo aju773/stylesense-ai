@@ -4,8 +4,16 @@
 
 **Blocked by:** 08 — Shopping Cart
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Order creation API with `select_for_update()` DB lock for stock
-- [ ] Mock checkout flow
-- [ ] Order History UI Page
+- [x] Order creation API with `select_for_update()` DB lock for stock
+- [x] Mock checkout flow
+- [x] Order History UI Page
+
+## Slices
+
+- [10.1 — Order Models](10.1-order-models.md)
+- [10.2 — Order Placement Service, Mock Gateway, and Orders API](10.2-order-api-stock-locking.md)
+- [10.3 — Checkout Flow UI](10.3-checkout-flow-ui.md)
+- [10.4 — Order History Page](10.4-order-history-page.md)
+

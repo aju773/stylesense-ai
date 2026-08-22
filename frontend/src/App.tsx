@@ -9,6 +9,8 @@ import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Chat from "./pages/Chat";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import Orders from "./pages/Orders";
 
 // Placeholder pages — we'll build real ones in later tickets
 function Home() {
@@ -16,9 +18,6 @@ function Home() {
 }
 function Wishlist() {
   return <h1>Wishlist (Protected)</h1>;
-}
-function Orders() {
-  return <h1>Orders (Protected)</h1>;
 }
 function Profile() {
   return <h1>Profile (Protected)</h1>;
@@ -44,6 +43,7 @@ export default function App() {
               <Route element={<ProtectedRoute />}>
                 <Route path="/chat" element={<Chat />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/profile" element={<Profile />} />
