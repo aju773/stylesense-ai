@@ -14,7 +14,7 @@ from .base import BaseAIProvider
 class GroqProvider(BaseAIProvider):
     """Groq AI provider — OpenAI-compatible, no message translation needed."""
 
-    def __init__(self, api_key: str, model_name: str = "llama-3.3-70b-versatile"):
+    def __init__(self, api_key: str, model_name: str = "openai/gpt-oss-120b"):
         super().__init__(api_key=api_key, model_name=model_name)
         self.client = AsyncGroq(api_key=self.api_key)
 
