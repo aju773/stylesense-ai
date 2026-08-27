@@ -101,9 +101,11 @@ class TokenRefreshView(APIView):
             return response
 
 
-class MeView(generics.RetrieveAPIView):
+class MeView(generics.RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
 
     def get_object(self):
+        # Ownership is enforced by construction: this always resolves to the
+        # requesting user, never to an id supplied by the client.
         return self.request.user
