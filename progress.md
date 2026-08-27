@@ -1,8 +1,9 @@
 # Progress
 
 ## Current
-- Epic 11 charted and sliced into 11.1–11.11. **Nothing built yet** — the epic is a spec, produced by a `/wayfinder` map at `.scratch/beautiful-stylesense/map.md` where every decision has a ticket carrying its full reasoning and the alternatives that lost.
-- Start with **11.1** (typography and tokens) and **11.3** (imagery curation). Everything else depends on one or both, and prototyping a surface against a fallback typeface or a gradient placeholder means redoing it.
+- Epic 11 charted and sliced into 11.1–11.11, produced by a `/wayfinder` map at `.scratch/beautiful-stylesense/map.md` where every decision has a ticket carrying its full reasoning and the alternatives that lost.
+- **11.3 (imagery curation) done.** 11.1 (typography and tokens) still first for everything else — most of the epic depends on one or both, and prototyping a surface against a fallback typeface or a gradient placeholder means redoing it.
+- 11.4 (image rendering: serializer, ratios, fallback) is next and unblocked — the `ProductImage` rows and `docs/products.json` `images` arrays it needs now exist.
 - Three throwaway prototypes live under `frontend/src/pages/prototype/` with routes in `App.tsx`. Each is deleted by the sub-ticket it informed (11.6, 11.9, 11.11).
 
 ## Completed
@@ -49,6 +50,7 @@
 - Sub-ticket 9.2: Wishlist REST API (service layer, `GET /api/wishlist/`, `POST /api/wishlist/toggle/`, `DELETE /api/wishlist/items/<id>/`; ownership enforced by scoping the lookup; list is 2 queries for any number of saves — **concurrent-save race proven to collapse to one row instead of a 500**)
 - Sub-ticket 9.3: Wishlist Data Layer + Heart Toggle (`api/wishlist.ts`, `useWishlist` hooks with optimistic toggle + snapshot rollback, `SaveButton` in `overlay`/`wide` variants wired into the catalog grid, the product page's previously dead wishlist button, and the chat product strip with `source: "ai"`; `["wishlist"]` purged on auth change alongside the cart — rollback measured at a 26ms optimistic window)
 - Sub-ticket 9.4: Wishlist Page (`/wishlist` replacing the stub, All Saved / AI Picks tabs filtered client-side, `WishlistCard` with unsave-by-row-id, out-of-stock treatment, both empty states, `Wishlist` link in `SiteHeader` — rollback *and* server reconciliation both observed in the browser)
+- Sub-ticket 11.3: Product Imagery Curation and Seeding (50 hand-browsed Unsplash photos matched to category+gender in `docs/products.json`'s new `images` array, all verified `200` via `curl`; `seed_products.py` now writes `ProductImage` rows keyed on `(product, display_order)` so an already-seeded database still gets images on re-run — proven against both a fresh DB and the existing 50-product/0-image DB; 4 more Unsplash photos for the home hero + Edit tiles in `frontend/src/lib/homeImagery.ts`)
 
 ## Recent Decisions
 - Use `uv` for modern Python package management
@@ -147,3 +149,7 @@
 - Chat confirms an add inline (`✓ In your bag` plus the header badge) rather than opening the cart drawer, deliberately departing from `ProductDetail`. That pattern was set where the shopper is finished; a chat message holds up to five picks and a drawer covers the ones still unread
 - The profile's budget control is preset chips, not the design's slider. Budget is advisory — nothing consumes the number precisely — so `₹2,500–₹7,000` and `₹3,000–₹6,000` behave identically, and the slider's precision has no consumer. It would have cost a custom dual-range control the project does not own
 - The profile drops the account nav entirely. With Security out of scope it reduces to two real tabs plus My Orders and Wishlist, which are top-level routes already in the header — half the entries would only navigate away
+- The 50 product photos were hand-browsed on unsplash.com (page search + DOM extraction of `images.unsplash.com/photo-<id>` URLs), not pulled through `api.unsplash.com` — no Unsplash API key exists anywhere in this repo. That keeps attribution under the Unsplash *License* (not required, footer credit only) rather than the API Guidelines' mandatory per-photo attribution, per the ticket's decision
+- `seed_products.py`'s `ProductImage` write is keyed on `(product, display_order)`, not on the product's creation branch. `get_or_create` on the product already skips every row on a re-run against a seeded database — piggybacking the image write on `created` would mean an already-seeded DB (the exact trap this ticket named) never gets images at all
+- `docs/products.json` stores `images` as an array of URLs (currently always length 1) rather than an array of `{url, is_primary, display_order}` objects — the seed command derives `is_primary`/`display_order` from array position, since JSON array order already carries that information and a second, parallel `is_primary` field in the JSON would just be a second place for it to go stale
+- Four more Unsplash photos (hero + 3 Edit tiles) live in `frontend/src/lib/homeImagery.ts` as plain exported constants, not in `docs/products.json` — they aren't products and 11.7 (home page, not yet built) is their only consumer
