@@ -2,7 +2,9 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 export default function Register() {
+  useDocumentTitle("Create Account");
   const { register } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -55,7 +57,7 @@ export default function Register() {
     <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-[400px]">
         <div className="mb-8">
-          <h1 className="font-['Playfair_Display'] text-4xl text-[#1A1A1A] mb-2">
+          <h1 className="font-display text-4xl text-[#1A1A1A] mb-2">
             Create Account
           </h1>
           <p className="text-base text-[#777]">

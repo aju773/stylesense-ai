@@ -89,7 +89,7 @@ export default function SiteHeader() {
         <div className="h-16 flex items-center justify-between gap-4">
           <Link
             to="/"
-            className="text-lg font-['Playfair_Display'] tracking-tight uppercase text-[#1A1A1A]"
+            className="text-lg font-display tracking-tight uppercase text-[#1A1A1A]"
           >
             StyleSense AI
           </Link>

@@ -8,6 +8,7 @@ import {
 } from "../api/orders";
 import { useCart } from "../hooks/useCart";
 import { usePlaceOrder } from "../hooks/useOrders";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { formatPrice, getGradient } from "../lib/product";
 
 /** The fake card the mock gateway "charges". Never sent anywhere. */
@@ -76,7 +77,7 @@ function Confirmation({ order }: { order: Order }) {
         ✓
       </div>
       <div className="flex flex-col gap-2">
-        <h1 className="text-4xl font-['Playfair_Display'] text-[#1A1A1A]">
+        <h1 className="text-4xl font-display text-[#1A1A1A]">
           Order Confirmed
         </h1>
         <p className="text-sm text-[#777]">
@@ -99,7 +100,7 @@ function Confirmation({ order }: { order: Order }) {
         </div>
         <div className="flex justify-between items-center pt-3 border-t border-[#E5E5E5]">
           <span className="text-base font-semibold text-[#1A1A1A]">Paid</span>
-          <span className="text-2xl font-['Playfair_Display'] text-[#1A1A1A] tabular-nums">
+          <span className="text-2xl font-display text-[#1A1A1A] tabular-nums">
             {formatPrice(order.total)}
           </span>
         </div>
@@ -124,6 +125,7 @@ function Confirmation({ order }: { order: Order }) {
 }
 
 export default function Checkout() {
+  useDocumentTitle("Checkout");
   const { data: cart, isLoading } = useCart();
   const placeOrder = usePlaceOrder();
   const navigate = useNavigate();
@@ -150,7 +152,7 @@ export default function Checkout() {
   if (!totals || items.length === 0) {
     return (
       <div className="max-w-[1280px] mx-auto px-4 lg:px-8 py-24 flex flex-col items-center gap-6">
-        <h1 className="text-4xl font-['Playfair_Display'] text-[#1A1A1A]">Checkout</h1>
+        <h1 className="text-4xl font-display text-[#1A1A1A]">Checkout</h1>
         <p className="text-sm text-[#777]">Your bag is empty.</p>
         <Link
           to="/shop"
@@ -187,7 +189,7 @@ export default function Checkout() {
   return (
     <div className="max-w-[1280px] mx-auto px-4 lg:px-8 py-12 pb-24">
       <div className="mb-10 flex items-baseline gap-4">
-        <h1 className="text-4xl lg:text-5xl font-['Playfair_Display'] text-[#1A1A1A]">
+        <h1 className="text-4xl lg:text-5xl font-display text-[#1A1A1A]">
           Checkout
         </h1>
         <Link
@@ -270,7 +272,7 @@ export default function Checkout() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <span className="text-sm font-['Playfair_Display'] text-white/80">
+                      <span className="text-sm font-display text-white/80">
                         {item.product.brand.charAt(0)}
                       </span>
                     )}
@@ -314,7 +316,7 @@ export default function Checkout() {
 
             <div className="flex justify-between items-center border-t border-[#E5E5E5] pt-5">
               <span className="text-base font-semibold text-[#1A1A1A]">Total</span>
-              <span className="text-2xl font-['Playfair_Display'] text-[#1A1A1A] tabular-nums">
+              <span className="text-2xl font-display text-[#1A1A1A] tabular-nums">
                 {formatPrice(totals.total)}
               </span>
             </div>

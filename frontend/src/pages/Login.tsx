@@ -2,9 +2,11 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 
 export default function Login() {
+  useDocumentTitle("Log In");
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,7 +46,7 @@ export default function Login() {
     <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-[400px]">
         <div className="mb-8">
-          <h1 className="font-['Playfair_Display'] text-4xl text-[#1A1A1A] mb-2">
+          <h1 className="font-display text-4xl text-[#1A1A1A] mb-2">
             Welcome Back
           </h1>
           <p className="text-base text-[#777]">Sign in to your account</p>

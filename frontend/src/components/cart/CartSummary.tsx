@@ -37,7 +37,7 @@ export default function CartSummary({
 
       <div className="flex justify-between items-center">
         <span className="text-base font-semibold text-[#1A1A1A]">Total</span>
-        <span className="text-2xl font-['Playfair_Display'] text-[#1A1A1A] tabular-nums">
+        <span className="text-2xl font-display text-[#1A1A1A] tabular-nums">
           {formatPrice(totals.total)}
         </span>
       </div>

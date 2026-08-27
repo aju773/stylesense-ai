@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Link } from "react-router";
 import OrderCard from "../components/orders/OrderCard";
 import { useOrders } from "../hooks/useOrders";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export default function Orders() {
+  useDocumentTitle("Orders");
   const { data: orders, isLoading, isError } = useOrders();
   // The newest order is the one you came here to look at, so it starts open.
   // `null` means "nothing open"; undefined means "not chosen yet".
@@ -28,7 +30,7 @@ export default function Orders() {
   if (orders.length === 0) {
     return (
       <div className="max-w-[1280px] mx-auto px-4 lg:px-8 py-24 flex flex-col items-center gap-6">
-        <h1 className="text-4xl font-['Playfair_Display'] text-[#1A1A1A]">My Orders</h1>
+        <h1 className="text-4xl font-display text-[#1A1A1A]">My Orders</h1>
         <p className="text-sm text-[#777]">You haven&apos;t placed an order yet.</p>
         <Link
           to="/shop"
@@ -45,7 +47,7 @@ export default function Orders() {
   return (
     <div className="max-w-[1280px] mx-auto px-4 lg:px-8 py-12 pb-24">
       <header className="mb-12">
-        <h1 className="text-4xl lg:text-5xl font-['Playfair_Display'] text-[#1A1A1A] mb-2">
+        <h1 className="text-4xl lg:text-5xl font-display text-[#1A1A1A] mb-2">
           My Orders
         </h1>
         <p className="text-base text-[#777]">

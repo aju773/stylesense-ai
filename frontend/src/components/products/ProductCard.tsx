@@ -15,7 +15,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <div
           className={`aspect-[3/4] bg-gradient-to-br ${gradient} rounded-lg mb-3 flex items-end p-4 overflow-hidden relative`}
         >
-          <span className="text-6xl font-['Playfair_Display'] text-white/30 font-bold leading-none">
+          <span className="text-6xl font-display text-white/30 font-bold leading-none">
             {product.brand.charAt(0)}
           </span>
           {/* Hover overlay */}

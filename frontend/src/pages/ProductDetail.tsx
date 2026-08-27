@@ -4,6 +4,7 @@ import { useProduct } from "../hooks/useProduct";
 import { useAuth } from "../context/AuthContext";
 import { useCartUI } from "../context/CartUIContext";
 import { useAddToCart } from "../hooks/useCart";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import ImageGallery from "../components/products/ImageGallery";
 import SaveButton from "../components/wishlist/SaveButton";
 
@@ -14,6 +15,7 @@ function formatPrice(price: string) {
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { data: product, isLoading, isError } = useProduct(slug!);
+  useDocumentTitle(product?.name);
   const { isAuthenticated } = useAuth();
   const { openDrawer } = useCartUI();
   const addToCart = useAddToCart();
@@ -129,7 +131,7 @@ export default function ProductDetail() {
             </span>
 
             {/* Name */}
-            <h1 className="font-['Playfair_Display'] text-3xl lg:text-4xl text-[#1A1A1A]">
+            <h1 className="font-display text-3xl lg:text-4xl text-[#1A1A1A]">
               {product.name}
             </h1>
 

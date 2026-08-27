@@ -100,7 +100,7 @@ export default function CartDrawer() {
           <footer className="flex-none border-t border-[#E5E5E5] px-6 py-5 flex flex-col gap-4 bg-[#F9F7F4]">
             <div className="flex justify-between items-center">
               <span className="text-sm font-semibold text-[#1A1A1A]">Total</span>
-              <span className="text-xl font-['Playfair_Display'] text-[#1A1A1A] tabular-nums">
+              <span className="text-xl font-display text-[#1A1A1A] tabular-nums">
                 {formatPrice(totals.total)}
               </span>
             </div>

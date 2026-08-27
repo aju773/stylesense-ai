@@ -2,8 +2,10 @@ import { Link, useNavigate } from "react-router";
 import CartLineItem from "../components/cart/CartLineItem";
 import CartSummary from "../components/cart/CartSummary";
 import { useCart } from "../hooks/useCart";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export default function Cart() {
+  useDocumentTitle("Your Bag");
   const { data: cart, isLoading, isError } = useCart();
   const navigate = useNavigate();
 
@@ -28,7 +30,7 @@ export default function Cart() {
   if (items.length === 0) {
     return (
       <div className="max-w-[1280px] mx-auto px-4 lg:px-8 py-24 flex flex-col items-center gap-6">
-        <h1 className="text-4xl font-['Playfair_Display'] text-[#1A1A1A]">Your Bag</h1>
+        <h1 className="text-4xl font-display text-[#1A1A1A]">Your Bag</h1>
         <p className="text-sm text-[#777]">Nothing in here yet.</p>
         <Link
           to="/shop"
@@ -43,7 +45,7 @@ export default function Cart() {
   return (
     <div className="max-w-[1280px] mx-auto px-4 lg:px-8 py-12 pb-24">
       <div className="mb-10 flex items-baseline gap-4">
-        <h1 className="text-4xl lg:text-5xl font-['Playfair_Display'] text-[#1A1A1A]">
+        <h1 className="text-4xl lg:text-5xl font-display text-[#1A1A1A]">
           Your Bag
         </h1>
         <span className="text-sm text-[#777]">

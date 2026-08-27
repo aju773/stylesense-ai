@@ -1,8 +1,7 @@
 # Progress
 
 ## Current
-- Epic 11 charted and sliced into 11.1–11.11. **Nothing built yet** — the epic is a spec, produced by a `/wayfinder` map at `.scratch/beautiful-stylesense/map.md` where every decision has a ticket carrying its full reasoning and the alternatives that lost.
-- Start with **11.1** (typography and tokens) and **11.3** (imagery curation). Everything else depends on one or both, and prototyping a surface against a fallback typeface or a gradient placeholder means redoing it.
+- Sub-ticket 11.1 done (see Completed). Next up: **11.3** (imagery curation) and **11.2** (site chrome), both unblocked now that fonts/tokens exist.
 - Three throwaway prototypes live under `frontend/src/pages/prototype/` with routes in `App.tsx`. Each is deleted by the sub-ticket it informed (11.6, 11.9, 11.11).
 
 ## Completed
@@ -49,6 +48,7 @@
 - Sub-ticket 9.2: Wishlist REST API (service layer, `GET /api/wishlist/`, `POST /api/wishlist/toggle/`, `DELETE /api/wishlist/items/<id>/`; ownership enforced by scoping the lookup; list is 2 queries for any number of saves — **concurrent-save race proven to collapse to one row instead of a 500**)
 - Sub-ticket 9.3: Wishlist Data Layer + Heart Toggle (`api/wishlist.ts`, `useWishlist` hooks with optimistic toggle + snapshot rollback, `SaveButton` in `overlay`/`wide` variants wired into the catalog grid, the product page's previously dead wishlist button, and the chat product strip with `source: "ai"`; `["wishlist"]` purged on auth change alongside the cart — rollback measured at a 26ms optimistic window)
 - Sub-ticket 9.4: Wishlist Page (`/wishlist` replacing the stub, All Saved / AI Picks tabs filtered client-side, `WishlistCard` with unsave-by-row-id, out-of-stock treatment, both empty states, `Wishlist` link in `SiteHeader` — rollback *and* server reconciliation both observed in the browser)
+- Sub-ticket 11.1: Typography, Design Tokens, and Document Head (`@fontsource-variable/playfair-display` + `@fontsource-variable/inter` self-hosted and imported above `@import "tailwindcss"`; `@theme` block registers `--font-display`/`--font-sans` off the `" Variable"` family names, the 12 markdown-body colour tokens, and the `h1`–`h4`/`body-*`/`label-caps` type scale; all 28 `font-['Playfair_Display']` call sites across 17 files migrated to `font-display`; `useDocumentTitle` hook wired into all 9 route components plus the `Home`/`Profile` stubs; `<title>` and `favicon.svg` replaced; `hero.png`/`react.svg`/`vite.svg` deleted — fonts confirmed actually loaded via `document.fonts` and visually rendering in the browser, `pnpm build` clean)
 
 ## Recent Decisions
 - Use `uv` for modern Python package management
@@ -147,3 +147,9 @@
 - Chat confirms an add inline (`✓ In your bag` plus the header badge) rather than opening the cart drawer, deliberately departing from `ProductDetail`. That pattern was set where the shopper is finished; a chat message holds up to five picks and a drawer covers the ones still unread
 - The profile's budget control is preset chips, not the design's slider. Budget is advisory — nothing consumes the number precisely — so `₹2,500–₹7,000` and `₹3,000–₹6,000` behave identically, and the slider's precision has no consumer. It would have cost a custom dual-range control the project does not own
 - The profile drops the account nav entirely. With Security out of scope it reduces to two real tabs plus My Orders and Wishlist, which are top-level routes already in the header — half the entries would only navigate away
+
+### 11.1 implementation notes
+- Colour token names follow the research doc's worked example (`--color-primary`, `--color-bg-cream`) rather than transcribing DESIGN.md's prose labels verbatim — `--color-text-dark`, `--color-text-muted`, `--color-text-light`, `--color-border`, `--color-bg-white`, `--color-bg-light`, `--color-accent-warm`, `--color-success`, `--color-error`, `--color-ai-accent`. None collide with a Tailwind default colour name, so no existing utility changes meaning
+- `useDocumentTitle` renders `"<Page> — StyleSense AI"`, falling back to bare `"StyleSense AI"` when called with no argument (used by the `Home` stub). Wired into all 9 real page components plus the `Home`/`Profile` placeholders in `App.tsx`; `ProductDetail` passes `product?.name` so the tab title is blank-then-filled rather than a placeholder string while the product loads
+- New favicon is a plain monogram — cream "S" (`#F9F7F4`) on primary black (`#1A1A1A`), serif system font — replacing the Vite-scaffold purple lightning bolt. Not a redesign, just off the palette instead of on no palette; `public/icons.svg` (the footer's social-icon sprite) is untouched, out of scope
+- Verified fonts are not just declared but actually fetched and applied: `document.fonts` reports `"Playfair Display Variable"` and `"Inter Variable"` both at `status: "loaded"`, and computed `font-family` on a rendered `<h1>`/`<body>` matches, confirmed in-browser on `/login` and `/shop`

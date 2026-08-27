@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import WishlistCard from "../components/wishlist/WishlistCard";
 import { useWishlist } from "../hooks/useWishlist";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 type Tab = "all" | "ai";
 
@@ -11,6 +12,7 @@ const TABS: { id: Tab; label: string; accent?: boolean }[] = [
 ];
 
 export default function Wishlist() {
+  useDocumentTitle("Wishlist");
   const { data: items, isLoading, isError } = useWishlist();
   const [tab, setTab] = useState<Tab>("all");
 
@@ -33,7 +35,7 @@ export default function Wishlist() {
   if (items.length === 0) {
     return (
       <div className="max-w-[1280px] mx-auto px-4 lg:px-8 py-24 flex flex-col items-center gap-6">
-        <h1 className="text-4xl font-['Playfair_Display'] text-[#1A1A1A]">Wishlist</h1>
+        <h1 className="text-4xl font-display text-[#1A1A1A]">Wishlist</h1>
         <p className="text-sm text-[#777]">
           Nothing saved yet — tap the heart on anything you like.
         </p>
@@ -54,7 +56,7 @@ export default function Wishlist() {
   return (
     <div className="max-w-[1280px] mx-auto px-4 lg:px-8 py-12 pb-24">
       <header className="border-b border-[#E5E5E5] pb-6">
-        <h1 className="text-4xl lg:text-5xl font-['Playfair_Display'] text-[#1A1A1A] flex items-baseline gap-3">
+        <h1 className="text-4xl lg:text-5xl font-display text-[#1A1A1A] flex items-baseline gap-3">
           Wishlist
           <span className="text-base text-[#777]">
             ({items.length} item{items.length === 1 ? "" : "s"})

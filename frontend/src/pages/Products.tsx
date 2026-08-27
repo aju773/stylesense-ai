@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router";
 import { useProducts } from "../hooks/useProducts";
 import { useDebounce } from "../hooks/useDebounce";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import type { ProductFilters } from "../api/products";
 import ProductCard from "../components/products/ProductCard";
 import FilterSidebar from "../components/products/FilterSidebar";
@@ -20,6 +21,7 @@ function filtersFromParams(params: URLSearchParams): ProductFilters {
 }
 
 export default function Products() {
+  useDocumentTitle("Shop");
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -51,7 +53,7 @@ export default function Products() {
       {/* Page header */}
       <div className="flex items-center justify-between mb-10">
         <div>
-          <h1 className="font-['Playfair_Display'] text-4xl text-[#1A1A1A] mb-2">
+          <h1 className="font-display text-4xl text-[#1A1A1A] mb-2">
             Shop
           </h1>
           <p className="text-sm text-[#777]">
