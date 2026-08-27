@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchConversationMessages } from "../api/chat";
 import { useChat } from "../hooks/useChat";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import ConversationSidebar from "../components/chat/ConversationSidebar";
 import ChatBubble from "../components/chat/ChatBubble";
 import TypingIndicator from "../components/chat/TypingIndicator";
 import ChatInput from "../components/chat/ChatInput";
 
 export default function Chat() {
+  useDocumentTitle("AI Stylist");
   const [activeConversationId, setActiveConversationId] = useState<number | null>(null);
   const [historyConversationId, setHistoryConversationId] = useState<number | null>(null);
   const { messages, isStreaming, sendMessage, clearMessages, conversationId } = useChat();

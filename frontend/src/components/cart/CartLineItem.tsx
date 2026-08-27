@@ -83,7 +83,7 @@ export default function CartLineItem({
               item.product.name
             )} flex items-end p-2`}
           >
-            <span className="text-3xl font-['Playfair_Display'] text-white/30 font-bold leading-none">
+            <span className="text-3xl font-display text-white/30 font-bold leading-none">
               {item.product.brand.charAt(0)}
             </span>
           </div>

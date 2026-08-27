@@ -31,7 +31,7 @@ function ProductMiniCard({ product }: { product: ChatProductCard }) {
                 product.name,
               )} flex items-end p-3`}
             >
-              <span className="text-5xl font-['Playfair_Display'] text-white/30 font-bold leading-none">
+              <span className="text-5xl font-display text-white/30 font-bold leading-none">
                 {product.brand.charAt(0)}
               </span>
             </div>

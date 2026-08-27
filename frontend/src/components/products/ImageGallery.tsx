@@ -66,7 +66,7 @@ export default function ImageGallery({
           <div
             className={`w-full h-full bg-gradient-to-br ${gradient} flex items-end p-8`}
           >
-            <span className="text-8xl font-['Playfair_Display'] text-white/30 font-bold leading-none">
+            <span className="text-8xl font-display text-white/30 font-bold leading-none">
               {brandInitial}
             </span>
           </div>

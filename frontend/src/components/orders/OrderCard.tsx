@@ -28,7 +28,7 @@ function Thumb({ item, size }: { item: OrderItem; size: "sm" | "md" }) {
           className="w-full h-full object-cover"
         />
       ) : (
-        <span className="font-['Playfair_Display'] text-white/80">
+        <span className="font-display text-white/80">
           {item.product_brand.charAt(0)}
         </span>
       )}
@@ -111,7 +111,7 @@ export default function OrderCard({
       >
         <div className="w-full flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="text-lg font-['Playfair_Display'] text-[#1A1A1A] mb-1">
+            <div className="text-lg font-display text-[#1A1A1A] mb-1">
               Order {order.order_number}
             </div>
             <div className="text-sm text-[#777]">
@@ -152,7 +152,7 @@ export default function OrderCard({
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             <div className="lg:col-span-2">
-              <h3 className="text-base font-['Playfair_Display'] text-[#1A1A1A] mb-5">
+              <h3 className="text-base font-display text-[#1A1A1A] mb-5">
                 Items ({order.item_count})
               </h3>
               <ul className="flex flex-col gap-6">
@@ -163,7 +163,7 @@ export default function OrderCard({
             </div>
 
             <div className="lg:col-span-1">
-              <h3 className="text-base font-['Playfair_Display'] text-[#1A1A1A] mb-4">
+              <h3 className="text-base font-display text-[#1A1A1A] mb-4">
                 Order Summary
               </h3>
               <div className="flex flex-col gap-2">

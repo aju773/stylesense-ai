@@ -1,1 +1,64 @@
+@import "@fontsource-variable/playfair-display";
+@import "@fontsource-variable/inter";
 @import "tailwindcss";
+
+@theme {
+  /* Typefaces — Fontsource variable builds register under "<Family> Variable",
+     not the bare family name. See docs/research-tailwind-v4-theme-fonts.md. */
+  --font-display: "Playfair Display Variable", serif;
+  --font-sans: "Inter Variable", sans-serif;
+
+  /* Colour palette — the 12-token markdown-body set in designs/design-system/DESIGN.md
+     is canonical; the YAML frontmatter's Material-3 set is generator output wired to
+     nothing and is not used here. */
+  --color-primary: #1a1a1a; /* Primary Black — headings, CTAs */
+  --color-text-dark: #333333; /* Body text */
+  --color-text-muted: #777777; /* Secondary text, labels */
+  --color-text-light: #aaaaaa; /* Placeholders, disabled */
+  --color-border: #e5e5e5; /* Dividers, card borders */
+  --color-bg-white: #ffffff; /* Primary background */
+  --color-bg-cream: #f9f7f4; /* Section backgrounds, hover states */
+  --color-bg-light: #f5f5f5; /* Input backgrounds, cards */
+  --color-accent-warm: #c9a96e; /* Subtle gold for premium touches */
+  --color-success: #2d8a4e; /* Status indicators */
+  --color-error: #d64045; /* Validation/errors */
+  --color-ai-accent: #6366f1; /* AI-specific elements */
+
+  /* Type scale */
+  --text-h1: 48px;
+  --text-h1--line-height: 1.2;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h1--font-weight: 400;
+
+  --text-h2: 36px;
+  --text-h2--line-height: 1.2;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h2--font-weight: 400;
+
+  --text-h3: 24px;
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.01em;
+  --text-h3--font-weight: 500;
+
+  --text-h4: 18px;
+  --text-h4--line-height: 1.4;
+  --text-h4--letter-spacing: 0em;
+  --text-h4--font-weight: 600;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 1.6;
+
+  --text-body-base: 16px;
+  --text-body-base--line-height: 1.5;
+
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 1.5;
+
+  --text-body-xs: 12px;
+  --text-body-xs--line-height: 1.4;
+
+  --text-label-caps: 12px;
+  --text-label-caps--line-height: 1.2;
+  --text-label-caps--letter-spacing: 0.1em;
+  --text-label-caps--font-weight: 600;
+}

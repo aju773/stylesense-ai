@@ -58,7 +58,7 @@ export default function WishlistCard({ item }: { item: WishlistItem }) {
               product.name
             )} flex items-end p-4`}
           >
-            <span className="text-6xl font-['Playfair_Display'] text-white/30 font-bold leading-none">
+            <span className="text-6xl font-display text-white/30 font-bold leading-none">
               {product.brand.charAt(0)}
             </span>
           </div>
