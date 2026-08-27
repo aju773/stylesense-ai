@@ -15,7 +15,9 @@ Your behavior:
 - When the catalog doesn't have a good match, give general fashion advice honestly — don't force catalog items that don't fit.
 - Be conversational, warm, and concise. No walls of text.
 - If the user asks something completely unrelated to fashion, politely redirect.
-
+- Size and budget in the shopper's profile are not hard requirements — a product outside either is still worth mentioning with a caveat (e.g. "runs small, size up" or "over budget but worth it"). Never hide a good product only because of size or budget.
+- If a recommendation would clearly benefit from knowing the shopper's size, budget, gender or aesthetic, you may invite them to set their style preferences in their profile — but do this at most once per conversation.
+{user_profile}
 Product citation rules (strict):
 - Each catalog entry below starts with its id, like [id:12]. When you mention a catalog product, write its name followed immediately by the marker [[product:12]] using that exact id.
 - Only use ids that appear in the catalog below. Never invent an id.
@@ -24,6 +26,40 @@ Product citation rules (strict):
 - The markers are invisible formatting. Never mention them, explain them, or show ids to the user.
 {product_context}"""
 HISTORY_LIMIT = 20
+
+
+def _build_user_profile_block(user) -> str:
+    """Render the `{user_profile}` block, or "" when preferences are empty.
+
+    Omitted entirely (not a "no preferences on file" placeholder) because an
+    empty profile is the normal case, and an explicit absence line invites the
+    model to reference it far more often than intended.
+    """
+    prefs = getattr(user, "style_preferences", None) or {}
+    vibes = prefs.get("vibes") or []
+    size = prefs.get("size")
+    budget = prefs.get("budget") or {}
+    gender = prefs.get("gender")
+
+    lines = []
+    if vibes:
+        lines.append(f"- Preferred aesthetic: {', '.join(vibes)}")
+    if size:
+        lines.append(f"- Usual size: {size}")
+    budget_min, budget_max = budget.get("min"), budget.get("max")
+    if budget_min is not None or budget_max is not None:
+        if budget_min is not None and budget_max is not None:
+            lines.append(f"- Budget: ₹{budget_min}-₹{budget_max}")
+        elif budget_max is not None:
+            lines.append(f"- Budget: up to ₹{budget_max}")
+        else:
+            lines.append(f"- Budget: from ₹{budget_min}")
+    if gender:
+        lines.append(f"- Shops for: {gender}")
+
+    if not lines:
+        return ""
+    return "\nShopper's style profile (use as guidance, not a hard filter):\n" + "\n".join(lines) + "\n"
 
 
 class ChatService:
@@ -88,9 +124,13 @@ class ChatService:
         # 4. Build product context via vector search
         product_context = await self.context_builder.build_product_context(
             message_text,
+            user,
         )
         # 5. Construct messages for AI
-        system_prompt = SYSTEM_PROMPT.format(product_context=product_context)
+        system_prompt = SYSTEM_PROMPT.format(
+            user_profile=_build_user_profile_block(user),
+            product_context=product_context,
+        )
         messages = [{"role": "system", "content": system_prompt}] + history
         # 6. Call AI
         ai_response = await self.orchestrator.generate_completion(messages)
@@ -140,9 +180,13 @@ class ChatService:
         # 4. Build product context via vector search
         product_context = await self.context_builder.build_product_context(
             message_text,
+            user,
         )
         # 5. Construct messages for AI
-        system_prompt = SYSTEM_PROMPT.format(product_context=product_context)
+        system_prompt = SYSTEM_PROMPT.format(
+            user_profile=_build_user_profile_block(user),
+            product_context=product_context,
+        )
         messages = [{"role": "system", "content": system_prompt}] + history
         # 6. Stream AI response, accumulating tokens
         full_response = []
