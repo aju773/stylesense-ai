@@ -14,9 +14,10 @@ Decide:
 - **How many images per product.** `ProductDetail` already renders an
   `ImageGallery` with zoom, so one image per product would leave that component
   showing a gallery of one. Weigh a single hero image against a small set.
-- **Which model field carries them.** `Product.image_url` (a single URL) and the
-  `ProductImage` related table both exist. Decide which is canonical, and what
-  `image_url` means if `ProductImage` rows are also present.
+- **Which model field carries them.** `Product` itself has no image field —
+  `ProductImage` is a separate related table, and `Category.image_url` exists
+  but describes a category thumbnail, not a product photo. Decide whether that
+  arrangement is fine as-is or needs anything added.
 - **Aspect ratio and dimensions.** The shop grid, chat cards, cart line items,
   and the product gallery all crop differently today. Pick one source aspect
   ratio and the crop strategy for each surface. This decision constrains the
@@ -51,19 +52,23 @@ Populating the database perfectly would still leave the shop grid showing
 placeholders. Closing this is part of the imagery work, not a separate concern:
 the list serializer must carry a primary image URL.
 
-### 1. `ProductImage` is the single source
+### 1. `ProductImage` is the single source — and already is
 
-Three image fields exist and only one is real:
+**Correction:** the charting session assumed `Product` carried its own
+`image_url` field alongside the `ProductImage` table, and treated deleting the
+former as a decision. It does not exist — `Product` has no image field of its
+own. What actually exists:
 
 | Field | Read by |
 | --- | --- |
-| `Product.image_url` | nothing — referenced by zero serializers |
 | `ProductImage` | `ProductDetailSerializer` (gallery), and `ProductCardSerializer.get_image_url()` which picks `is_primary` or falls back to the first row |
+| `Category.image_url` | nothing — a category thumbnail, unrelated to product photos, and out of this ticket's scope |
 | `OrderItem.image_url` | order-time snapshot, frozen at purchase — a separate concern, untouched |
 
+There is nothing to delete and no migration to write for this decision.
 `ProductImage` already feeds every live consumer, and `is_primary` already
-provides a hero image without a second field. The dead `Product.image_url` field
-is removed rather than left as a trap for someone to populate the wrong thing.
+provides a hero image without a second field — the question this ticket
+answers is how to populate it, not which field wins.
 
 ### 2. One photo per product, gallery views derived as crops
 

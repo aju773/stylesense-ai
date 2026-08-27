@@ -26,7 +26,7 @@ The brief was "make it beautiful", naming the home page, the shop filter, and th
 
 **Playfair Display has never loaded.** `frontend/src/index.css` is one line, `@import "tailwindcss";`, and `index.html` carries no font link. Meanwhile `font-['Playfair_Display']` appears 28 times across 17 files. Tailwind never loads font files — not for arbitrary values, not for `@theme` tokens — so all 28 headings compile to valid, warning-free CSS and silently fall through to a system serif. The app's entire display typeface has never rendered.
 
-**The catalog has no photographs.** `docs/products.json` holds 50 products and zero `image_url` values, though `Product.image_url` and a `ProductImage` table both exist. Every card in every surface renders a pastel gradient with a giant brand initial. And `ProductSerializer` — which backs the shop list — sends no image field at all, so the grid could not display a photo even with perfect data.
+**The catalog has no photographs.** `docs/products.json` holds 50 products and zero `image_url` values, though a `ProductImage` table already exists to hold them. Every card in every surface renders a pastel gradient with a giant brand initial. And `ProductSerializer` — which backs the shop list — sends no image field at all, so the grid could not display a photo even with perfect data.
 
 Fixing those two moves "beautiful" further than any new page does, and every surface below depends on both, which is why 11.1–11.4 come first.
 

@@ -20,8 +20,8 @@ made each ticket a build slice rather than a decision.
 
 **2. Product imagery — hand-map curated editorial stock to all 50 products.**
 `docs/products.json` carries 50 products with zero `image_url` values, so every
-card in the app renders a gradient placeholder with a letter. `Product.image_url`
-and a `ProductImage` table already exist; this is a data gap, not a code gap.
+card in the app renders a gradient placeholder with a letter. A `ProductImage`
+table already exists to hold them; this is a data gap, not a code gap.
 Rejected: a random-image API (breaks the "same product, same image" contract),
 commissioned photography (cost and time), and shipping gradients forever
 (makes the destination unreachable).

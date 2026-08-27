@@ -41,7 +41,7 @@ Full findings: [`docs/research-product-imagery-sources.md`](../../../docs/resear
   trousers, dresses, jackets, tops, shirts, t-shirts) are covered comfortably
   by both.
 - **The deciding fact is hotlinking.** The plan is to hand-map a permanent
-  photo URL straight into `Product.image_url` — i.e. hotlink it forever.
+  photo URL straight into `ProductImage.image_url` — i.e. hotlink it forever.
   Unsplash's own API Guidelines *require* exactly this ("all API uses must
   use the hotlinked image URLs returned by the API"), Pexels explicitly
   permits it, but **Pixabay's API docs explicitly forbid it** ("permanent

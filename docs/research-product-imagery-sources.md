@@ -1,5 +1,13 @@
 # Research: Free Stock Photography Sources for Product Imagery (Unsplash, Pexels, Pixabay)
 
+> **Correction, added after this doc was written:** the brief for this research
+> assumed the app stores a product's photo URL in `Product.image_url`. That
+> field does not exist — the app stores it in a related `ProductImage` table
+> instead. Every reference to `Product.image_url` below should be read as
+> `ProductImage.image_url`. It does not change any conclusion: hotlinking a
+> permanent URL forever is exactly the same act regardless of which table
+> column holds it, so the Pixabay/Unsplash/Pexels findings stand unaltered.
+
 ## Primary Sources & Documentation
 - **Unsplash License**: [unsplash.com/license](https://unsplash.com/license)
 - **Unsplash API Documentation**: [unsplash.com/documentation](https://unsplash.com/documentation)

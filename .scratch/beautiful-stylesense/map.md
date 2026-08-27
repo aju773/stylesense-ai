@@ -48,9 +48,9 @@ tickets.
 - `frontend/src/index.css` is one line, `@import "tailwindcss";`. Playfair
   Display is never loaded, yet `font-['Playfair_Display']` appears 28 times
   across 17 files. Every heading falls back to a system serif.
-- `docs/products.json` has 50 products and **zero** `image_url` values, though
-  `Product.image_url` and a `ProductImage` table both exist. Every card in the
-  app renders a gradient placeholder.
+- `docs/products.json` has 50 products and **zero** `image_url` values, though a
+  `ProductImage` table already exists to hold them. Every card in the app
+  renders a gradient placeholder.
 - The AI chat product cards already render images, prices, a save-heart, and
   link to `/products/:slug` — `ChatProductStrip.tsx`. They are blocked on data,
   not code.
@@ -66,6 +66,17 @@ tickets.
   while building ticket 06's prototype.
 
 ## Decisions so far
+
+**Correction (post-charting, caught by an implementing agent):** the charting
+session and ticket 04 assumed `Product` carried its own `image_url` field
+alongside the `ProductImage` table, and treated dropping that field as part of
+decision 1. It does not exist — `Product` has no image field of its own; only
+`ProductImage` (per-product photos) and `Category.image_url` (a category
+thumbnail, unrelated and out of scope) exist. `ProductImage` is still the
+correct single source and every other finding in ticket 04 stands; there is
+just nothing to delete and no migration to write for it. Fixed in ticket 04,
+`00-charting.md`, `01-photography-sources.md`, and the epic docs.
+
 
 - [Destination shape](issues/00-charting.md) — a spec, not an implementation: decisions land as an epic doc plus sub-tickets, execution follows separately.
 - [Product imagery approach](issues/00-charting.md) — hand-map curated editorial stock photography to all 50 products; gradients are a stopgap, not a look.
@@ -85,7 +96,7 @@ tickets.
 
 - [Design foundation](issues/05-design-foundation.md) — the markdown palette in `DESIGN.md` is canonical and its Material-3 frontmatter twin stays unwired; `@theme` carries colours, fonts, and the type scale only, because radii and shadow tokens would silently restyle nine built pages; both faces self-host via Fontsource, Playfair as `--font-display` with all 28 call sites migrated and Inter overriding `--font-sans` so body text inherits it with no edits; two-row header whose wordmark row retracts on scroll, exposing the never-surfaced `search` param for the first time; three-column footer with the Support column and newsletter cut for having no destinations, on every route but `/chat` and `/checkout`; per-route titles from a small hook, and a favicon that is not a purple lightning bolt.
 
-- [Imagery plan](issues/04-imagery-plan.md) — `ProductImage` is the single source and the dead `Product.image_url` field goes; one curated photo per product with gallery views derived as imgix crops of that same photo, because three different stock photos of "linen trousers" are three different garments; everything sourced and stored at 4:5 with the four outlier surfaces converging; the 50 URLs live in `docs/products.json` behind an idempotent seed path; gradients become a quiet neutral placeholder with `onError` finally wired; one footer credit line rather than per-photo bylines; four more curated photos for the home hero and The Edit. Found a defect: `ProductSerializer` sends no image field at all, so the shop grid could not show a photo even with perfect data.
+- [Imagery plan](issues/04-imagery-plan.md) — `ProductImage` is confirmed the single source (`Product` itself carries no image field, contrary to the charting session's initial assumption — corrected in the ticket); one curated photo per product with gallery views derived as imgix crops of that same photo, because three different stock photos of "linen trousers" are three different garments; everything sourced and stored at 4:5 with the four outlier surfaces converging; the 50 URLs live in `docs/products.json` behind an idempotent seed path; gradients become a quiet neutral placeholder with `onError` finally wired; one footer credit line rather than per-photo bylines; four more curated photos for the home hero and The Edit. Found a defect: `ProductSerializer` sends no image field at all, so the shop grid could not show a photo even with perfect data.
 
 - [Shop filter bar](issues/06-filter-bar-prototype.md) — popover bar with instant apply, counts in each dropdown, and the chip row kept because price only ever surfaces as a chip; zero-count options stay visible and disabled rather than reflowing the list; on `/shop` the whole header retracts so the bar takes the sticky slot at 56px net; grid ladder 2/3/4 with the design's density toggle dropped; mobile gets the portalled filter sheet. Prototype at `frontend/src/pages/prototype/FilterBarPrototype.tsx`.
 
