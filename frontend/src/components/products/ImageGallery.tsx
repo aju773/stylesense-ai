@@ -1,34 +1,21 @@
 import { useState, useRef } from "react";
 import type { ProductImage } from "../../api/products";
+import { deriveGalleryViews } from "../../lib/product";
+import ProductPhoto from "../common/ProductPhoto";
+
 interface ImageGalleryProps {
   images: ProductImage[];
   productName: string;
-  brandInitial: string;
 }
-// Fallback gradients for products without images
-const gradients = [
-  "from-[#E8E0D8] to-[#D4C5B5]",
-  "from-[#D8DDE8] to-[#B5BFD4]",
-  "from-[#E8D8DE] to-[#D4B5C0]",
-  "from-[#D8E8E0] to-[#B5D4C5]",
-  "from-[#E0D8E8] to-[#C5B5D4]",
-  "from-[#E8E4D8] to-[#D4CDB5]",
-];
-function getGradient(name: string) {
-  let hash = 0;
-  for (const ch of name) hash = (hash + ch.charCodeAt(0)) % gradients.length;
-  return gradients[hash];
-}
-export default function ImageGallery({
-  images,
-  productName,
-  brandInitial,
-}: ImageGalleryProps) {
+
+export default function ImageGallery({ images, productName }: ImageGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [zoom, setZoom] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
   const imgRef = useRef<HTMLDivElement>(null);
-  const hasImages = images.length > 0;
+  const views = deriveGalleryViews(images);
+  const hasImages = views.length > 0;
+
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     if (!imgRef.current) return;
     const rect = imgRef.current.getBoundingClientRect();
@@ -37,7 +24,7 @@ export default function ImageGallery({
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setZoomPos({ x, y });
   }
-  const gradient = getGradient(productName);
+
   return (
     <div className="flex flex-col gap-3">
       {/* Main image */}
@@ -48,36 +35,26 @@ export default function ImageGallery({
         onMouseLeave={() => setZoom(false)}
         onMouseMove={handleMouseMove}
       >
-        {hasImages ? (
-          <img
-            src={images[activeIndex].image_url}
-            alt={`${productName} — view ${activeIndex + 1}`}
-            className="w-full h-full object-cover transition-transform duration-300"
-            style={
-              zoom
-                ? {
-                    transform: "scale(2)",
-                    transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
-                  }
-                : undefined
-            }
-          />
-        ) : (
-          <div
-            className={`w-full h-full bg-gradient-to-br ${gradient} flex items-end p-8`}
-          >
-            <span className="text-8xl font-display text-white/30 font-bold leading-none">
-              {brandInitial}
-            </span>
-          </div>
-        )}
+        <ProductPhoto
+          src={views[activeIndex]?.url}
+          alt={`${productName} — view ${activeIndex + 1}`}
+          className="w-full h-full transition-transform duration-300"
+          style={
+            zoom
+              ? {
+                  transform: "scale(2)",
+                  transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
+                }
+              : undefined
+          }
+        />
       </div>
-      {/* Thumbnails — only show if multiple images */}
-      {hasImages && images.length > 1 && (
+      {/* Thumbnails — only show if multiple views */}
+      {views.length > 1 && (
         <div className="grid grid-cols-4 gap-3">
-          {images.map((img, i) => (
+          {views.map((view, i) => (
             <button
-              key={img.id}
+              key={view.key}
               onClick={() => setActiveIndex(i)}
               className={`aspect-[4/5] overflow-hidden transition-opacity ${
                 i === activeIndex
@@ -85,10 +62,10 @@ export default function ImageGallery({
                   : "border border-[#E5E5E5] opacity-60 hover:opacity-100"
               }`}
             >
-              <img
-                src={img.image_url}
+              <ProductPhoto
+                src={view.url}
                 alt={`${productName} — thumbnail ${i + 1}`}
-                className="w-full h-full object-cover"
+                className="w-full h-full"
               />
             </button>
           ))}

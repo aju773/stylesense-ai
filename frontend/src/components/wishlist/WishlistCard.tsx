@@ -1,7 +1,8 @@
 import { Link } from "react-router";
 import type { WishlistItem } from "../../api/wishlist";
-import { formatPrice, getGradient } from "../../lib/product";
+import { formatPrice } from "../../lib/product";
 import { useRemoveWishlistItem } from "../../hooks/useWishlist";
+import ProductPhoto from "../common/ProductPhoto";
 
 function HeartIcon() {
   return (
@@ -39,30 +40,17 @@ export default function WishlistCard({ item }: { item: WishlistItem }) {
   return (
     <div className="group relative flex flex-col gap-3">
       <div
-        className={`relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-[#EBE7E6] ${
+        className={`relative aspect-[4/5] w-full overflow-hidden rounded-lg ${
           inStock ? "" : "opacity-60"
         }`}
       >
-        {product.image_url ? (
-          <img
-            src={product.image_url}
-            alt={product.name}
-            loading="lazy"
-            className={`w-full h-full object-cover transition-transform duration-700 ${
-              inStock ? "group-hover:scale-105" : "grayscale-[30%]"
-            }`}
-          />
-        ) : (
-          <div
-            className={`w-full h-full bg-gradient-to-br ${getGradient(
-              product.name
-            )} flex items-end p-4`}
-          >
-            <span className="text-6xl font-display text-white/30 font-bold leading-none">
-              {product.brand.charAt(0)}
-            </span>
-          </div>
-        )}
+        <ProductPhoto
+          src={product.image_url}
+          alt={product.name}
+          className={`w-full h-full transition-transform duration-700 ${
+            inStock ? "group-hover:scale-105" : "grayscale-[30%]"
+          }`}
+        />
 
         {/* The heart on this page only ever removes, so it is a delete by row
             id — not the toggle. Through a toggle, an impatient double-click

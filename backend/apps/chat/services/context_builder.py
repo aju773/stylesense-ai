@@ -22,11 +22,14 @@ class ContextBuilder:
         surfacing for a womenswear shopper is wrong, not a nuance, and halving
         a 50-product pool still leaves plenty for `top_k`. Size and budget
         deliberately do NOT filter — a mismatch there is a caveat the stylist
-        should surface, not a reason to hide the product.
+        should surface, not a reason to hide the product. `stock` does filter:
+        zero stock is unavailability, not a caveat the stylist has advice to
+        give, and with `top_k = 5` every unbuyable pick is a fifth of the reply.
         """
-        # Check if any products have embeddings
+        # Check if any in-stock products have embeddings
         has_embeddings = await Product.objects.filter(
             embedding__isnull=False,
+            stock__gt=0,
         ).aexists()
         if not has_embeddings:
             return "No product catalog available."
@@ -40,7 +43,7 @@ class ContextBuilder:
         )
         # Cosine similarity search
         queryset = (
-            Product.objects.filter(embedding__isnull=False)
+            Product.objects.filter(embedding__isnull=False, stock__gt=0)
             .select_related("category")
             .annotate(distance=CosineDistance("embedding", query_vector))
         )

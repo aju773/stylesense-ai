@@ -66,7 +66,11 @@ export default function Chat() {
       <section className="flex-1 flex flex-col h-full bg-white">
         <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6">
           {allMessages.map((m, i) => (
-            <ChatBubble key={i} {...m} />
+            <ChatBubble
+              key={i}
+              {...m}
+              isStreaming={isStreaming && i === allMessages.length - 1}
+            />
           ))}
           {showTyping && <TypingIndicator />}
           <div ref={bottomRef} />

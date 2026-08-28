@@ -3,7 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { CartUIProvider } from "./context/CartUIContext";
 import AppLayout from "./components/layout/AppLayout";
 import ProtectedRoute from "./components/common/ProtectedRoute";
-import { useDocumentTitle } from "./hooks/useDocumentTitle";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
@@ -13,16 +13,8 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import Wishlist from "./pages/Wishlist";
+import Profile from "./pages/Profile";
 
-// Placeholder pages — we'll build real ones in later tickets
-function Home() {
-  useDocumentTitle();
-  return <h1>Home</h1>;
-}
-function Profile() {
-  useDocumentTitle("Profile");
-  return <h1>Profile (Protected)</h1>;
-}
 export default function App() {
   return (
     <BrowserRouter>

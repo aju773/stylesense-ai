@@ -115,11 +115,7 @@ export default function ProductDetail() {
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
         {/* Left — Image Gallery (55%) */}
         <div className="w-full lg:w-[55%]">
-          <ImageGallery
-            images={product.images ?? []}
-            productName={product.name}
-            brandInitial={product.brand.charAt(0)}
-          />
+          <ImageGallery images={product.images ?? []} productName={product.name} />
         </div>
 
         {/* Right — Product Info (45%), sticky on desktop */}

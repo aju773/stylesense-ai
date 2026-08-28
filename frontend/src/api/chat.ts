@@ -17,6 +17,10 @@ export interface ChatProductCard {
   price: string;
   discount_price: string | null;
   image_url: string | null;
+  reason: string | null;
+  stock: number;
+  sizes: string[];
+  colors: string[];
 }
 
 export interface ChatMessageRecord {

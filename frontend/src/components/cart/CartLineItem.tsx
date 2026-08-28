@@ -1,7 +1,8 @@
 import { Link } from "react-router";
 import type { CartItem } from "../../api/cart";
 import { useRemoveCartItem, useUpdateCartItem } from "../../hooks/useCart";
-import { formatPrice, getGradient } from "../../lib/product";
+import { formatPrice } from "../../lib/product";
+import ProductPhoto from "../common/ProductPhoto";
 
 const MAX_QUANTITY = 10;
 
@@ -62,32 +63,20 @@ export default function CartLineItem({
   const paidPrice = Number(item.unit_price);
   const savings = (listPrice - paidPrice) * item.quantity;
 
-  const thumbSize = compact ? "w-[72px] h-[96px]" : "w-[100px] h-[130px]";
+  const thumbSize = compact ? "w-[72px] aspect-[4/5]" : "w-[100px] aspect-[4/5]";
 
   return (
     <div className="flex gap-4 py-4 border-b border-[#E5E5E5]">
       <Link
         to={`/products/${item.product.slug}`}
         onClick={onNavigate}
-        className={`${thumbSize} flex-none overflow-hidden bg-[#F5F5F5] rounded-sm`}
+        className={`${thumbSize} flex-none overflow-hidden rounded-sm`}
       >
-        {item.product.image_url ? (
-          <img
-            src={item.product.image_url}
-            alt={item.product.name}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div
-            className={`w-full h-full bg-gradient-to-br ${getGradient(
-              item.product.name
-            )} flex items-end p-2`}
-          >
-            <span className="text-3xl font-display text-white/30 font-bold leading-none">
-              {item.product.brand.charAt(0)}
-            </span>
-          </div>
-        )}
+        <ProductPhoto
+          src={item.product.image_url}
+          alt={item.product.name}
+          className="w-full h-full"
+        />
       </Link>
 
       <div className="flex-1 min-w-0 flex flex-col justify-between">

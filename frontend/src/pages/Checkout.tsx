@@ -9,7 +9,8 @@ import {
 import { useCart } from "../hooks/useCart";
 import { usePlaceOrder } from "../hooks/useOrders";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
-import { formatPrice, getGradient } from "../lib/product";
+import { formatPrice } from "../lib/product";
+import ProductPhoto from "../components/common/ProductPhoto";
 
 /** The fake card the mock gateway "charges". Never sent anywhere. */
 const DEMO_CARD = {
@@ -260,22 +261,12 @@ export default function Checkout() {
             <ul className="flex flex-col gap-4 max-h-[320px] overflow-y-auto">
               {items.map((item) => (
                 <li key={item.id} className="flex gap-3">
-                  <div
-                    className={`w-12 h-16 flex-none bg-gradient-to-br ${getGradient(
-                      item.product.name
-                    )} flex items-center justify-center`}
-                  >
-                    {item.product.image_url ? (
-                      <img
-                        src={item.product.image_url}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-sm font-display text-white/80">
-                        {item.product.brand.charAt(0)}
-                      </span>
-                    )}
+                  <div className="w-12 aspect-[4/5] flex-none overflow-hidden">
+                    <ProductPhoto
+                      src={item.product.image_url}
+                      alt=""
+                      className="w-full h-full"
+                    />
                   </div>
                   <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
                     <span className="text-sm text-[#1A1A1A] truncate">

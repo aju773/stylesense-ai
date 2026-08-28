@@ -1,14 +1,40 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, viewsets
-from rest_framework.pagination import CursorPagination
+from rest_framework.filters import OrderingFilter
+from rest_framework.pagination import PageNumberPagination
 
+from .facets import build_facets
 from .filters import ProductFilter
 from .models import Category, Product
 from .serializers import CategorySerializer, ProductDetailSerializer, ProductSerializer
 
+# "Recommended" isn't a real column, and the other four options are locked to
+# one direction each (High-to-Low rating, not Low-to-High) — this is a curated
+# preset list, not generic per-field ordering, so a plain `ordering_fields`
+# allow-list can't express it. Every preset ends in `id` as a tiebreaker:
+# PageNumberPagination has no cursor to stay stable across ties on its own.
+SORT_PRESETS = {
+    "recommended": ("-rating", "-created_at", "id"),
+    "price": ("price", "id"),
+    "-price": ("-price", "id"),
+    "-rating": ("-rating", "id"),
+    "-created_at": ("-created_at", "id"),
+}
+DEFAULT_SORT = "recommended"
 
-class ProductPagination(CursorPagination):
+
+class ProductSortFilter(OrderingFilter):
+    def get_ordering(self, request, queryset, view):
+        preset = request.query_params.get("ordering", DEFAULT_SORT)
+        return list(SORT_PRESETS.get(preset, SORT_PRESETS[DEFAULT_SORT]))
+
+
+class ProductPagination(PageNumberPagination):
+    # CursorPagination returned no `count`, which the shop's result count and
+    # facet counts both need on the same payload — see 11.5's decisions. A
+    # static 50-row catalog doesn't need cursor pagination's insertion-drift
+    # guarantees.
     page_size = 12
-    ordering = "-created_at"
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
@@ -21,11 +47,23 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.AllowAny]
     lookup_field = "slug"
     filterset_class = ProductFilter
+    filter_backends = [DjangoFilterBackend, ProductSortFilter]
 
     def get_serializer_class(self):
         if self.action == "retrieve":
             return ProductDetailSerializer
         return ProductSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        response = self.get_paginated_response(serializer.data)
+        # Facets are computed against the unfiltered catalog, not the request's
+        # already-filtered queryset — each dimension reapplies every *other*
+        # active filter itself (see `build_facets`).
+        response.data["facets"] = build_facets(request, self.get_queryset())
+        return response
 
 
 class CategoryListView(generics.ListAPIView):

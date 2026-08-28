@@ -3,7 +3,7 @@ import logging
 from apps.chat.models import ChatMessage, Conversation
 from apps.chat.services.context_builder import ContextBuilder
 from apps.chat.services.factory import get_ai_orchestrator
-from apps.chat.services.product_markers import extract_product_ids
+from apps.chat.services.product_markers import extract_product_ids, extract_reasons
 from apps.products.models import Product
 from apps.products.serializers import ProductCardSerializer
 
@@ -23,7 +23,8 @@ Product citation rules (strict):
 - Only use ids that appear in the catalog below. Never invent an id.
 - Never recommend a specific catalog product without its marker.
 - Cite each product at most once per reply.
-- The markers are invisible formatting. Never mention them, explain them, or show ids to the user.
+- After your reply, on new lines, add one rationale line per product you cited: [[why:12]] followed by a single sentence (about 120 characters or fewer) saying why that pick fits. One line per cited id, in any order.
+- The markers and rationale lines are invisible formatting. Never mention them, explain them, or show ids to the user.
 {product_context}"""
 HISTORY_LIMIT = 20
 
@@ -90,7 +91,11 @@ class ChatService:
         position = {pk: index for index, pk in enumerate(product_ids)}
         products.sort(key=lambda product: position[product.pk])
         await ai_message.products.aset(products)
-        return ProductCardSerializer(products, many=True).data
+        reasons = extract_reasons(content)
+        cards = ProductCardSerializer(products, many=True).data
+        for card in cards:
+            card["reason"] = reasons.get(card["id"])
+        return cards
 
     async def send_message(self, user, conversation_id, message_text):
         """Process a user message and return the AI response.

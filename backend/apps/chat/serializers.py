@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.chat.services.product_markers import extract_product_ids
+from apps.chat.services.product_markers import extract_product_ids, extract_reasons
 from apps.products.serializers import ProductCardSerializer
 
 from .models import ChatMessage, Conversation
@@ -29,13 +29,22 @@ class ChatMessageSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "role", "content", "ai_provider_used", "created_at"]
 
     def get_products(self, obj) -> list[dict]:
-        """Cited products, ordered by first mention in the message body."""
+        """Cited products with their reasons, both reparsed from stored content.
+
+        No schema change needed for reasons: `ChatMessage.content` already
+        keeps markers intact for exactly this purpose, so a `[[why:12]]` line
+        is just as re-derivable as citation order was.
+        """
         products = list(obj.products.all())
         if not products:
             return []
         position = {pk: i for i, pk in enumerate(extract_product_ids(obj.content))}
         products.sort(key=lambda product: position.get(product.pk, len(position)))
-        return ProductCardSerializer(products, many=True).data
+        reasons = extract_reasons(obj.content)
+        cards = ProductCardSerializer(products, many=True).data
+        for card in cards:
+            card["reason"] = reasons.get(card["id"])
+        return cards
 
 
 class SendMessageSerializer(serializers.Serializer):

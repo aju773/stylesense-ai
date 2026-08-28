@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import type { Order, OrderItem } from "../../api/orders";
-import { formatPrice, getGradient } from "../../lib/product";
+import { formatPrice } from "../../lib/product";
+import ProductPhoto from "../common/ProductPhoto";
 import OrderStatusPill from "./OrderStatusPill";
 import OrderTracker from "./OrderTracker";
 
@@ -13,25 +14,11 @@ function formatPlacedAt(iso: string) {
 }
 
 function Thumb({ item, size }: { item: OrderItem; size: "sm" | "md" }) {
-  const box = size === "sm" ? "w-12 h-16" : "w-[72px] h-[92px]";
+  const box = size === "sm" ? "w-12 aspect-[4/5]" : "w-[72px] aspect-[4/5]";
 
   return (
-    <div
-      className={`${box} flex-none bg-gradient-to-br ${getGradient(
-        item.product_name
-      )} flex items-center justify-center`}
-    >
-      {item.image_url ? (
-        <img
-          src={item.image_url}
-          alt=""
-          className="w-full h-full object-cover"
-        />
-      ) : (
-        <span className="font-display text-white/80">
-          {item.product_brand.charAt(0)}
-        </span>
-      )}
+    <div className={`${box} flex-none overflow-hidden`}>
+      <ProductPhoto src={item.image_url} alt="" className="w-full h-full" />
     </div>
   );
 }

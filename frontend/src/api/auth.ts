@@ -1,11 +1,27 @@
 import api from "./axios";
 
+// Mirrors the closed schema `StylePreferencesSerializer` validates server-side
+// (backend/apps/users/serializers.py) — reads must tolerate missing keys, so
+// every key here is optional.
+export interface StylePreferences {
+  vibes?: string[];
+  size?: string | null;
+  gender?: string | null;
+  budget?: { min?: number; max?: number };
+}
+
 export interface User {
   id: number;
   email: string;
   first_name: string;
   last_name: string;
-  style_preferences: Record<string, unknown>;
+  style_preferences: StylePreferences;
+}
+
+export interface UpdateMePayload {
+  first_name?: string;
+  last_name?: string;
+  style_preferences?: StylePreferences;
 }
 
 export async function register(email: string, password: string): Promise<User> {
@@ -21,5 +37,9 @@ export async function logout(): Promise<void> {
 }
 export async function getMe(): Promise<User> {
   const { data } = await api.get<User>("/auth/me/");
+  return data;
+}
+export async function updateMe(payload: UpdateMePayload): Promise<User> {
+  const { data } = await api.patch<User>("/auth/me/", payload);
   return data;
 }
