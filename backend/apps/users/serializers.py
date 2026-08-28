@@ -48,7 +48,9 @@ class StylePreferencesSerializer(serializers.Serializer):
         required=False,
         allow_empty=True,
     )
-    size = serializers.ChoiceField(choices=SIZE_CHOICES, required=False, allow_null=True)
+    size = serializers.ChoiceField(
+        choices=SIZE_CHOICES, required=False, allow_null=True
+    )
     budget = BudgetSerializer(required=False)
     gender = serializers.ChoiceField(
         choices=Product.GENDER_CHOICES, required=False, allow_null=True

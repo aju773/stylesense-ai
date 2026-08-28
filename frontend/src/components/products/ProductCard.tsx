@@ -23,7 +23,11 @@ export interface CardProduct {
 }
 
 interface ProductCardProps {
-  product: CardProduct;
+  /** The catalog `Product` type declares `image_url` optional (it's always
+   * actually sent), which `CardProduct` doesn't allow — accepted here and
+   * normalized to `null` immediately below, so every internal component still
+   * works with the strict shape. */
+  product: Omit<CardProduct, "image_url"> & { image_url?: string | null };
   /** The AI's rationale for this pick. Omitted entirely when absent — the
    * catalog grid never passes one. */
   reason?: string | null;
@@ -205,8 +209,10 @@ function RowLayout({
   reason,
   showAddToBag,
   saveSource,
-}: Required<Pick<ProductCardProps, "product">> &
-  Pick<ProductCardProps, "reason" | "showAddToBag" | "saveSource">) {
+}: { product: CardProduct } & Pick<
+  ProductCardProps,
+  "reason" | "showAddToBag" | "saveSource"
+>) {
   const outOfStock = product.stock === 0;
   return (
     <div className="flex gap-4 py-4 first:pt-0">
@@ -257,8 +263,10 @@ function GridLayout({
   reason,
   showAddToBag,
   saveSource,
-}: Required<Pick<ProductCardProps, "product">> &
-  Pick<ProductCardProps, "reason" | "showAddToBag" | "saveSource">) {
+}: { product: CardProduct } & Pick<
+  ProductCardProps,
+  "reason" | "showAddToBag" | "saveSource"
+>) {
   const outOfStock = product.stock === 0;
   return (
     // The heart is a sibling of the link, not a child: a <button> inside an
@@ -310,16 +318,17 @@ export default function ProductCard({
   layout = "grid",
   saveSource,
 }: ProductCardProps) {
+  const normalized: CardProduct = { ...product, image_url: product.image_url ?? null };
   return layout === "row" ? (
     <RowLayout
-      product={product}
+      product={normalized}
       reason={reason}
       showAddToBag={showAddToBag}
       saveSource={saveSource}
     />
   ) : (
     <GridLayout
-      product={product}
+      product={normalized}
       reason={reason}
       showAddToBag={showAddToBag}
       saveSource={saveSource}

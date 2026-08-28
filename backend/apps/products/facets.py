@@ -25,7 +25,9 @@ def _counts(queryset, values, predicate):
     """One `.aggregate()` call computes every value's count for a dimension."""
     if not values:
         return {}
-    aggregates = {f"v{i}": Count("id", filter=predicate(v)) for i, v in enumerate(values)}
+    aggregates = {
+        f"v{i}": Count("id", filter=predicate(v)) for i, v in enumerate(values)
+    }
     result = queryset.aggregate(**aggregates)
     return {v: result[f"v{i}"] for i, v in enumerate(values)}
 
@@ -80,10 +82,16 @@ def build_facets(request, base_queryset):
 
     return {
         "category": [
-            {"value": c["slug"], "label": c["name"], "count": category_counts[c["slug"]]}
+            {
+                "value": c["slug"],
+                "label": c["name"],
+                "count": category_counts[c["slug"]],
+            }
             for c in categories
         ],
-        "gender": [{"value": g, "label": g, "count": gender_counts[g]} for g in genders],
+        "gender": [
+            {"value": g, "label": g, "count": gender_counts[g]} for g in genders
+        ],
         "brand": [{"value": b, "label": b, "count": brand_counts[b]} for b in brands],
         "color": [{"value": c, "label": c, "count": color_counts[c]} for c in colors],
         "size": [{"value": s, "label": s, "count": size_counts[s]} for s in sizes],
