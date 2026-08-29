@@ -7,6 +7,7 @@ from .models import ChatMessage, Conversation
 from .serializers import (
     ChatMessageSerializer,
     ConversationSerializer,
+    RenameConversationSerializer,
     SendMessageSerializer,
 )
 from .services.chat_service import ChatService
@@ -22,6 +23,36 @@ class ConversationListView(APIView):
             conversations.append(convo)
         serializer = ConversationSerializer(conversations, many=True)
         return Response(serializer.data)
+
+
+class ConversationDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    async def patch(self, request, conversation_id):
+        """Rename a conversation, or clear its title back to auto-generated.
+
+        Scoped to the caller's own conversations the same way
+        `get_owned_item` scopes cart/wishlist rows: someone else's id is
+        indistinguishable from a nonexistent one.
+        """
+        try:
+            conversation = await Conversation.objects.aget(
+                pk=conversation_id,
+                user=request.user,
+            )
+        except Conversation.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = RenameConversationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # A blank title isn't a real title — store None so the sidebar's
+        # `title || "New conversation"` fallback takes over, same as a
+        # conversation that never got auto-titled.
+        conversation.title = serializer.validated_data["title"] or None
+        await conversation.asave(update_fields=["title"])
+
+        return Response(ConversationSerializer(conversation).data)
 
 
 class ConversationMessagesView(APIView):

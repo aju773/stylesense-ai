@@ -45,3 +45,14 @@ export async function fetchConversationMessages(
   );
   return response.data;
 }
+
+export async function renameConversation(
+  conversationId: number,
+  title: string
+): Promise<Conversation> {
+  const response = await api.patch<Conversation>(
+    `/chat/conversations/${conversationId}/`,
+    { title }
+  );
+  return response.data;
+}

@@ -50,3 +50,10 @@ class ChatMessageSerializer(serializers.ModelSerializer):
 class SendMessageSerializer(serializers.Serializer):
     message = serializers.CharField(max_length=2000)
     conversation_id = serializers.IntegerField(required=False, default=None)
+
+
+class RenameConversationSerializer(serializers.Serializer):
+    # Capped at 50 to match the auto-generated title (first 50 chars of the
+    # first message) rather than the model's own 255-char ceiling — manual and
+    # auto titles should behave the same in the sidebar's truncated row.
+    title = serializers.CharField(max_length=50, allow_blank=True, trim_whitespace=True)

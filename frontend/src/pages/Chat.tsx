@@ -13,6 +13,7 @@ export default function Chat() {
   useDocumentTitle("AI Stylist");
   const [activeConversationId, setActiveConversationId] = useState<number | null>(null);
   const [historyConversationId, setHistoryConversationId] = useState<number | null>(null);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const { messages, isStreaming, sendMessage, clearMessages, conversationId } = useChat();
   const queryClient = useQueryClient();
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -62,8 +63,34 @@ export default function Chat() {
       <ConversationSidebar
         activeConversationId={activeConversationId}
         onSelectConversation={handleSelectConversation}
+        mobileOpen={mobileSidebarOpen}
+        onCloseMobile={() => setMobileSidebarOpen(false)}
       />
       <section className="flex-1 flex flex-col h-full min-h-0 bg-white">
+        <div className="md:hidden flex items-center px-4 py-3 border-b border-[#E5E5E5] flex-shrink-0">
+          <button
+            onClick={() => setMobileSidebarOpen(true)}
+            aria-label="Open conversation history"
+            className="w-9 h-9 flex items-center justify-center text-[#1A1A1A] hover:bg-[#F5F5F5] rounded-full transition-colors"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 6h18M3 12h18M3 18h18" />
+            </svg>
+          </button>
+          <span className="text-xs font-semibold tracking-[0.1em] uppercase text-[#1A1A1A] ml-2">
+            History
+          </span>
+        </div>
         <div className="flex-1 min-h-0 overflow-y-auto px-6 py-8 space-y-6">
           {allMessages.map((m, i) => (
             <ChatBubble
