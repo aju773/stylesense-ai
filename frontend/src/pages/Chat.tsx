@@ -58,13 +58,13 @@ export default function Chat() {
   const allMessages = [...historyMessages, ...liveToRender];
 
   return (
-    <div className="flex w-full h-screen">
+    <div className="flex w-full h-full min-h-0">
       <ConversationSidebar
         activeConversationId={activeConversationId}
         onSelectConversation={handleSelectConversation}
       />
-      <section className="flex-1 flex flex-col h-full bg-white">
-        <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6">
+      <section className="flex-1 flex flex-col h-full min-h-0 bg-white">
+        <div className="flex-1 min-h-0 overflow-y-auto px-6 py-8 space-y-6">
           {allMessages.map((m, i) => (
             <ChatBubble
               key={i}

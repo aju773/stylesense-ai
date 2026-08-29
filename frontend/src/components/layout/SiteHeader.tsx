@@ -203,7 +203,7 @@ export default function SiteHeader() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-[#E5E5E5]">
+    <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-[#E5E5E5] transform-gpu will-change-transform">
       <div className="max-w-[1280px] mx-auto px-4 lg:px-8">
         <div
           className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${
