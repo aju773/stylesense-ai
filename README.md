@@ -5,10 +5,8 @@ language — *"something for a summer wedding, under $150"* — and get real
 products from the catalogue, retrieved by semantic similarity rather than
 keyword matching, with the answer streaming back token by token.
 
-**Live demo:** _(fill in after first deploy)_
+**Live demo:** https://stylesense-ai-s5v8.onrender.com (free hosting, so the first load can take a minute to wake up)
 
-<!-- Replace with a real screenshot or GIF of the running app once chat UI ships.
-     A recruiter decides whether to keep reading based on this image. -->
 ![StyleSense AI](designs/page-home/screen.png)
 
 ---
