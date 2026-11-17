@@ -25,11 +25,8 @@
 **/*.sqlite3
 **/staticfiles
 
-# Not needed at runtime. designs/ alone is 4.5MB of PNGs.
-designs
+# Not needed at runtime.
 docs
-planning
-progress.md
 CLAUDE.md
 README.md
 .github
