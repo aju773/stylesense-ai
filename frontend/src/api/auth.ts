@@ -1,8 +1,5 @@
 import api from "./axios";
 
-// Mirrors the closed schema `StylePreferencesSerializer` validates server-side
-// (backend/apps/users/serializers.py) — reads must tolerate missing keys, so
-// every key here is optional.
 export interface StylePreferences {
   vibes?: string[];
   size?: string | null;

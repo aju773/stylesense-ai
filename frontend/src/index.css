@@ -3,28 +3,22 @@
 @import "tailwindcss";
 
 @theme {
-  /* Typefaces — Fontsource variable builds register under "<Family> Variable",
-     not the bare family name. See docs/research-tailwind-v4-theme-fonts.md. */
   --font-display: "Playfair Display Variable", serif;
   --font-sans: "Inter Variable", sans-serif;
 
-  /* Colour palette — the 12-token markdown-body set in designs/design-system/DESIGN.md
-     is canonical; the YAML frontmatter's Material-3 set is generator output wired to
-     nothing and is not used here. */
-  --color-primary: #1a1a1a; /* Primary Black — headings, CTAs */
-  --color-text-dark: #333333; /* Body text */
-  --color-text-muted: #777777; /* Secondary text, labels */
-  --color-text-light: #aaaaaa; /* Placeholders, disabled */
-  --color-border: #e5e5e5; /* Dividers, card borders */
-  --color-bg-white: #ffffff; /* Primary background */
-  --color-bg-cream: #f9f7f4; /* Section backgrounds, hover states */
-  --color-bg-light: #f5f5f5; /* Input backgrounds, cards */
-  --color-accent-warm: #c9a96e; /* Subtle gold for premium touches */
-  --color-success: #2d8a4e; /* Status indicators */
-  --color-error: #d64045; /* Validation/errors */
-  --color-ai-accent: #6366f1; /* AI-specific elements */
+  --color-primary: #1a1a1a;
+  --color-text-dark: #333333;
+  --color-text-muted: #777777;
+  --color-text-light: #aaaaaa;
+  --color-border: #e5e5e5;
+  --color-bg-white: #ffffff;
+  --color-bg-cream: #f9f7f4;
+  --color-bg-light: #f5f5f5;
+  --color-accent-warm: #c9a96e;
+  --color-success: #2d8a4e;
+  --color-error: #d64045;
+  --color-ai-accent: #6366f1;
 
-  /* Type scale */
   --text-h1: 48px;
   --text-h1--line-height: 1.2;
   --text-h1--letter-spacing: -0.02em;

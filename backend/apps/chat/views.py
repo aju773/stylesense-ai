@@ -46,9 +46,6 @@ class ConversationDetailView(APIView):
         serializer = RenameConversationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # A blank title isn't a real title — store None so the sidebar's
-        # `title || "New conversation"` fallback takes over, same as a
-        # conversation that never got auto-titled.
         conversation.title = serializer.validated_data["title"] or None
         await conversation.asave(update_fields=["title"])
 
@@ -94,8 +91,6 @@ class ConversationMessagesView(APIView):
                 {"error": "Conversation not found."},
                 status=status.HTTP_404_NOT_FOUND,
             )
-        # Re-fetch with prefetch: serializing `products` lazily would hit the DB
-        # from async context and raise SynchronousOnlyOperation.
         ai_message = await ChatMessage.objects.prefetch_related(
             "products__images",
         ).aget(pk=ai_message.pk)

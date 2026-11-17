@@ -3,15 +3,6 @@ import type { Facets, ProductFilters } from "../../api/products";
 import { FACET_LABELS, FACET_ORDER, type FacetKey, toggleValue } from "../../lib/facets";
 import FacetOptionRow from "./FacetOptionRow";
 
-/**
- * The mobile upgrade of 4.4's 300px drawer — same slide-in shell, now holding
- * every facet with counts plus price, instead of the old single-select rail.
- *
- * Portalled to `document.body`, not rendered where `FilterBar` sits in the
- * tree: `FilterBar`'s own sticky container carries `backdrop-blur`, which
- * creates a containing block that traps `position: fixed` — the same finding
- * that shaped the epic's header and cart drawer.
- */
 export default function FilterSheet({
   open,
   filters,

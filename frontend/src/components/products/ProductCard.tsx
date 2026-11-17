@@ -6,7 +6,6 @@ import { useAddToCart } from "../../hooks/useCart";
 import ProductPhoto from "../common/ProductPhoto";
 import SaveButton from "../wishlist/SaveButton";
 
-/** Shared subset both the catalog `Product` and chat `ChatProductCard` satisfy. */
 export interface CardProduct {
   id: number;
   name: string;
@@ -18,26 +17,14 @@ export interface CardProduct {
   stock: number;
   sizes: string[];
   colors: string[];
-  /** Catalog only — chat cards have no rating, so this stays optional. */
   rating?: string;
 }
 
 interface ProductCardProps {
-  /** The catalog `Product` type declares `image_url` optional (it's always
-   * actually sent), which `CardProduct` doesn't allow — accepted here and
-   * normalized to `null` immediately below, so every internal component still
-   * works with the strict shape. */
   product: Omit<CardProduct, "image_url"> & { image_url?: string | null };
-  /** The AI's rationale for this pick. Omitted entirely when absent — the
-   * catalog grid never passes one. */
   reason?: string | null;
-  /** Chat picks can add straight to the bag; the catalog card links to the
-   * product page for that instead, so this defaults off. */
   showAddToBag?: boolean;
-  /** `"row"` is the editorial mobile layout used only inside the chat picks
-   * block below its grid breakpoint. Catalog usage never sets this. */
   layout?: "grid" | "row";
-  /** `"ai"` only for chat recommendation cards — see SaveButton. */
   saveSource?: WishlistSource;
 }
 
@@ -73,15 +60,6 @@ function OutOfStockBadge() {
   );
 }
 
-/**
- * The add-to-bag action slot. Every catalog product has both sizes and
- * colors, and `cart_service._validate_variant` rejects an add missing either
- * whenever the product is sold in more than one — so a single click can never
- * just work here. It expands into an inline picker instead of a popover
- * (nothing to portal past the epic's `backdrop-filter` containing-block
- * problem) or a route to the product page (the point is acting without
- * leaving the conversation).
- */
 function AddToBag({ product }: { product: CardProduct }) {
   const [open, setOpen] = useState(false);
   const [size, setSize] = useState<string | null>(null);
@@ -92,9 +70,6 @@ function AddToBag({ product }: { product: CardProduct }) {
   const needsSize = product.sizes.length > 1;
   const needsColor = product.colors.length > 1;
 
-  // Stock can reach zero between the reply arriving and this click — history
-  // also replays old picks that ChatMessage.products has no idea went out of
-  // stock — so this is checked here, independent of retrieval-time filtering.
   if (product.stock === 0) {
     return (
       <span className="inline-flex w-full items-center justify-center border border-[#E5E5E5] px-4 py-2 text-[11px] uppercase tracking-[0.12em] text-[#AAA]">
@@ -269,9 +244,6 @@ function GridLayout({
 >) {
   const outOfStock = product.stock === 0;
   return (
-    // The heart is a sibling of the link, not a child: a <button> inside an
-    // <a> is invalid HTML, and nesting it means every save click also has to
-    // fight the anchor's navigation.
     <div className="group relative flex flex-col">
       <Link to={`/products/${product.slug}`} className="block">
         <div className="relative mb-3 aspect-[4/5] overflow-hidden rounded-lg">

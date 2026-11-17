@@ -26,7 +26,6 @@ class ContextBuilder:
         zero stock is unavailability, not a caveat the stylist has advice to
         give, and with `top_k = 5` every unbuyable pick is a fifth of the reply.
         """
-        # Check if any in-stock products have embeddings
         has_embeddings = await Product.objects.filter(
             embedding__isnull=False,
             stock__gt=0,
@@ -37,11 +36,9 @@ class ContextBuilder:
         prefs = (getattr(user, "style_preferences", None) or {}) if user else {}
         embed_text = self._build_embed_text(user_message, prefs)
 
-        # Embed the user's message (+ folded-in style signal)
         query_vector = await self.embedding_service.generate_embedding_async(
             embed_text,
         )
-        # Cosine similarity search
         queryset = (
             Product.objects.filter(embedding__isnull=False, stock__gt=0)
             .select_related("category")

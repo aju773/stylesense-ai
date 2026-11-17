@@ -49,8 +49,6 @@ export default function Wishlist() {
     );
   }
 
-  // Filtered in the browser, not by a request: the whole wishlist is already in
-  // the cache, so a per-tab fetch would be a round-trip to hide rows we hold.
   const visible = tab === "ai" ? items.filter((i) => i.source === "ai") : items;
 
   return (

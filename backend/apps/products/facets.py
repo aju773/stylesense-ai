@@ -3,8 +3,6 @@ from django.db.models import Count, Q
 from .filters import ProductFilter
 from .models import Category, Product
 
-# The five discrete facet dimensions that get counts. Price is a range, not a
-# set of values, so it has no facet block — it only ever surfaces as a chip.
 FACET_DIMENSIONS = ("category", "gender", "brand", "color", "size")
 
 

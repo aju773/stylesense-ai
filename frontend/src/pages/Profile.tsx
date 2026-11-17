@@ -4,9 +4,6 @@ import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { useMe, useUpdateMe } from "../hooks/useMe";
 import type { User } from "../api/auth";
 
-// Mirrors the closed vocabulary the server actually validates
-// (backend/apps/users/serializers.py) — the server owns enforcement, this
-// list only drives which chips render.
 const VIBE_CHOICES = ["Minimalist", "Tailored", "Bohemian", "Streetwear", "Monochrome"] as const;
 const SIZE_CHOICES = ["XS", "S", "M", "L", "XL", "XXL"] as const;
 const GENDER_CHOICES = ["Women", "Men", "Unisex"] as const;
@@ -22,10 +19,6 @@ interface BudgetBand {
   max?: number;
 }
 
-// Bands are mutually exclusive by construction — the epic's "settle in
-// implementation" note flags that neighbouring bands as drawn would overlap
-// at their shared boundary; a dedicated "Any" chip (rather than letting two
-// bands both claim "under ₹6,000") resolves it instead.
 const BUDGET_BANDS: BudgetBand[] = [
   { label: "Any" },
   { label: "Under ₹3,000", max: 3000 },
@@ -98,9 +91,6 @@ export default function Profile() {
   const [form, setForm] = useState<ProfileForm | null>(null);
   const [seededFor, setSeededFor] = useState<number | null>(null);
 
-  // Seeds once per user, adjusted during render rather than in an effect
-  // (react.dev's "adjusting state when data changes" pattern) — not on every
-  // background refetch, so an in-progress edit is never clobbered.
   if (data && seededFor !== data.id) {
     setForm(formFromUser(data));
     setSeededFor(data.id);

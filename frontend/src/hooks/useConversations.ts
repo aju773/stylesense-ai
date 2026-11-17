@@ -1,4 +1,3 @@
-// src/hooks/useConversations.ts
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   fetchConversations,
@@ -15,10 +14,6 @@ export function useConversations() {
   });
 }
 
-/**
- * Rename a conversation, mirroring `useWishlist`'s optimistic scaffolding:
- * cancel in-flight refetches, snapshot, apply, roll back on error.
- */
 export function useRenameConversation() {
   const queryClient = useQueryClient();
 

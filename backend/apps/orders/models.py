@@ -35,18 +35,8 @@ class Order(models.Model):
         DELIVERED = "delivered", "Delivered"
         CANCELLED = "cancelled", "Cancelled"
 
-    # The forward path a healthy order walks, in order. CANCELLED is
-    # deliberately absent: it is terminal and never advanced into or out of.
-    #
-    # There is no PENDING or FAILED state, because neither could ever be
-    # observed. Placement is one transaction: payment is charged inside it, so a
-    # decline rolls the whole thing back and no row survives to be marked
-    # failed. An order exists only if it was paid for.
     LIFECYCLE = [Status.PROCESSING, Status.SHIPPED, Status.DELIVERED]
 
-    # CASCADE keeps account deletion working, which is what this demo needs. A
-    # real shop would PROTECT or anonymise instead — orders are accounting
-    # records with a retention period, not user-owned rows.
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -59,9 +49,6 @@ class Order(models.Model):
         max_length=20, choices=Status.choices, default=Status.PROCESSING
     )
 
-    # Totals snapshot. Recomputed server-side from live prices at placement and
-    # then frozen — never recalculated from the lines on read, so a later price
-    # change cannot rewrite history.
     subtotal = models.DecimalField(max_digits=12, decimal_places=2)
     discount = models.DecimalField(max_digits=12, decimal_places=2)
     shipping = models.DecimalField(max_digits=12, decimal_places=2)
@@ -74,8 +61,6 @@ class Order(models.Model):
     class Meta:
         ordering = ["-placed_at"]
         indexes = [
-            # The one query the history page makes: this user's orders, newest
-            # first.
             models.Index(fields=["user", "-placed_at"], name="order_user_recent_idx"),
         ]
 
@@ -105,7 +90,6 @@ class OrderItem(models.Model):
         related_name="order_items",
     )
 
-    # Product snapshot — what this line looked like at purchase time.
     product_name = models.CharField(max_length=255)
     product_brand = models.CharField(max_length=100)
     product_slug = models.SlugField(max_length=255)
@@ -115,7 +99,6 @@ class OrderItem(models.Model):
     color = models.CharField(max_length=50, blank=True, default="")
     quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
 
-    # Both prices, so an order can show what was saved, not just what was paid.
     list_price = models.DecimalField(max_digits=10, decimal_places=2)
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
 

@@ -45,8 +45,6 @@ class WishlistToggleView(APIView):
         return Response(
             {
                 "saved": saved,
-                # Echoed on both paths so a removal is actionable by the client
-                # without an item to key off.
                 "product_id": product_id,
                 "item": WishlistItemSerializer(item).data if item else None,
             },

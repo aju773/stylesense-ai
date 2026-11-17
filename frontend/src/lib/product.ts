@@ -1,4 +1,3 @@
-// Shared presentation helpers for product cards (catalog grid + AI chat strip).
 
 export function formatPrice(price: string) {
   return `₹${Number(price).toLocaleString("en-IN")}`;
@@ -11,13 +10,6 @@ export interface GalleryView {
   url: string;
 }
 
-/**
- * One curated photo per product (11.3) — three different stock photos of
- * "linen trousers" are three different garments, so extra gallery views are
- * derived as imgix crops of that single photo rather than sourced separately.
- * Every seeded url is a `images.unsplash.com` imgix URL; `crop=` composes
- * with the `fit=crop` the seed already appends.
- */
 export function deriveGalleryViews(
   images: { id: number; image_url: string }[]
 ): GalleryView[] {

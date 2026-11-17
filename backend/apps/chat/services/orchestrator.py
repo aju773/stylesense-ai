@@ -52,7 +52,7 @@ class AIProviderOrchestrator:
                     messages, temperature
                 ):
                     yield chunk
-                return  # stream completed successfully
+                return
             except AIProviderTransientError as e:
                 last_error = e
                 logger.warning(

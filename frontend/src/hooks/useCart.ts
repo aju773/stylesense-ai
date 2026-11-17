@@ -27,14 +27,6 @@ export const EMPTY_CART: Cart = {
   },
 };
 
-/**
- * Re-derives totals for an optimistic cart, mirroring the server's formula.
- *
- * This is a throwaway estimate shown for the few hundred milliseconds before
- * the response lands — every mutation replaces the cache with the server's own
- * numbers on success. Nothing authoritative (checkout, order creation) may ever
- * read from here.
- */
 function estimateTotals(items: CartItem[]): Cart["totals"] {
   let subtotal = 0;
   let discount = 0;
@@ -62,11 +54,6 @@ function withItems(items: CartItem[]): Cart {
   return { items, totals: estimateTotals(items) };
 }
 
-/**
- * Shared optimistic scaffolding: cancel in-flight refetches so a stale response
- * can't overwrite the optimistic state, snapshot the cache, then apply `apply`.
- * The snapshot is what `onError` restores.
- */
 async function optimisticallyUpdate(
   queryClient: QueryClient,
   apply: (cart: Cart) => Cart
@@ -94,23 +81,16 @@ export function useCart() {
   return useQuery<Cart>({
     queryKey: CART_QUERY_KEY,
     queryFn: fetchCart,
-    // Carts are authenticated-only, so there is nothing to fetch while logged
-    // out — asking would just 401 and spam a retry loop.
     enabled: isAuthenticated,
   });
 }
 
-/** Item count for the header badge — 0 while logged out or still loading. */
 export function useCartCount(): number {
   const { data } = useCart();
   return data?.totals.item_count ?? 0;
 }
 
 export interface AddToCartVariables extends AddCartItemPayload {
-  /**
-   * Product data for the optimistic placeholder line. Optional: without it the
-   * add still works, it just shows nothing until the server answers.
-   */
   optimisticProduct?: CartProduct;
 }
 
@@ -118,7 +98,6 @@ export function useAddToCart() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    // `optimisticProduct` is client-side only — the server is told the ids.
     mutationFn: (variables: AddToCartVariables) =>
       addCartItem({
         product_id: variables.product_id,
@@ -133,8 +112,6 @@ export function useAddToCart() {
         const size = variables.size ?? "";
         const color = variables.color ?? "";
 
-        // Mirrors the server's upsert: a matching variant bumps the existing
-        // line rather than creating a second one.
         const existing = cart.items.find(
           (item) =>
             item.product.id === product_id &&
@@ -157,8 +134,6 @@ export function useAddToCart() {
         const unitPrice =
           optimisticProduct.discount_price ?? optimisticProduct.price;
 
-        // Negative id marks this as a placeholder that has no server row yet.
-        // The success handler replaces the whole cart, so it never survives.
         const placeholder: CartItem = {
           id: -Date.now(),
           product: optimisticProduct,

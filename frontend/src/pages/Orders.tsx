@@ -7,8 +7,6 @@ import { useDocumentTitle } from "../hooks/useDocumentTitle";
 export default function Orders() {
   useDocumentTitle("Orders");
   const { data: orders, isLoading, isError } = useOrders();
-  // The newest order is the one you came here to look at, so it starts open.
-  // `null` means "nothing open"; undefined means "not chosen yet".
   const [expandedId, setExpandedId] = useState<number | null | undefined>(undefined);
 
   if (isLoading) {

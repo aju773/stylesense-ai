@@ -41,7 +41,6 @@ export default function Register() {
       ) {
         const data = (err as { response: { data: Record<string, unknown> } })
           .response.data;
-        // DRF returns errors as { field: ["error message"] }
         const messages = Object.values(data)
           .flat()
           .join(" ");

@@ -1,6 +1,5 @@
 import api from "./axios";
 
-/** Compact product payload the server nests in each cart line. */
 export interface CartProduct {
   id: number;
   name: string;
@@ -17,17 +16,11 @@ export interface CartItem {
   size: string;
   color: string;
   quantity: number;
-  /** Price charged per unit — already the markdown where one applies. */
   unit_price: string;
   line_total: string;
   added_at: string;
 }
 
-/**
- * All money comes from the server. Nothing in the frontend recomputes these —
- * optimistic updates included, which estimate them and then get corrected by
- * the response.
- */
 export interface CartTotals {
   subtotal: string;
   discount: string;
@@ -49,7 +42,6 @@ export interface AddCartItemPayload {
   quantity?: number;
 }
 
-/** Mutating endpoints answer with the whole recomputed bag. */
 interface CartMutationResponse {
   item: CartItem;
   cart: Cart;

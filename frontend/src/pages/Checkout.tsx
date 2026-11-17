@@ -12,7 +12,6 @@ import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { formatPrice } from "../lib/product";
 import ProductPhoto from "../components/common/ProductPhoto";
 
-/** The fake card the mock gateway "charges". Never sent anywhere. */
 const DEMO_CARD = {
   number: "4242 4242 4242 4242",
   name: "DEMO CUSTOMER",
@@ -148,8 +147,6 @@ export default function Checkout() {
   const items = cart?.items ?? [];
   const totals = cart?.totals;
 
-  // Landing here with an empty bag means arriving by URL, or coming back after
-  // an order already went through. Either way there is nothing to check out.
   if (!totals || items.length === 0) {
     return (
       <div className="max-w-[1280px] mx-auto px-4 lg:px-8 py-24 flex flex-col items-center gap-6">
@@ -173,8 +170,6 @@ export default function Checkout() {
         onSuccess: (placed) => setOrder(placed),
         onError: (error) => {
           const parsed = parsePlaceOrderError(error);
-          // An empty bag isn't something to explain on this page — the guard
-          // above already renders the right thing once the cache refetches.
           if (parsed.kind === "empty") {
             navigate("/cart");
             return;

@@ -1,4 +1,3 @@
-// src/hooks/useChat.ts
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import type { ChatProductCard } from "../api/chat";
@@ -9,12 +8,6 @@ export interface ChatMessage {
   products?: ChatProductCard[];
 }
 
-// Derived from the current page rather than hardcoded, so the same build works
-// on localhost and in production with no environment variable.
-//
-// The protocol swap is not cosmetic: a page served over https may not open a
-// plain ws:// socket. Browsers block it as mixed content, and the failure is
-// silent enough to be genuinely confusing — the socket just never connects.
 const WS_URL = `${window.location.protocol === "https:" ? "wss:" : "ws:"}//${
   window.location.host
 }/ws/chat/`;
@@ -30,7 +23,7 @@ export function useChat() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-          return; // don't connect at all while logged out
+          return;
         }
 
     let reconnectAttempts = 0;
@@ -43,7 +36,7 @@ export function useChat() {
 
       ws.onopen = () => {
         setIsConnected(true);
-        reconnectAttempts = 0; // a clean connect resets the backoff clock
+        reconnectAttempts = 0;
       };
 
       ws.onclose = () => {
@@ -73,8 +66,6 @@ export function useChat() {
             });
             break;
           case "products":
-            // Arrives just before stream_end, once the backend has resolved the
-            // [[product:id]] markers in the finished reply to real catalog rows.
             setMessages((prev) => {
               const next = [...prev];
               next[next.length - 1] = {

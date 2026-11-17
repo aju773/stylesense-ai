@@ -25,7 +25,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const queryClient = useQueryClient();
-  // On mount: check if user has a valid cookie
   useEffect(() => {
     authApi
       .getMe()
@@ -33,9 +32,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .catch(() => setUser(null))
       .finally(() => setIsLoading(false));
   }, []);
-  // Per-user server state must not outlive the session that fetched it.
-  // Without this, logging out and back in as someone else shows the previous
-  // user's bag and saved products from cache until the refetch lands.
   const purgeUserCaches = useCallback(() => {
     queryClient.removeQueries({ queryKey: ["cart"] });
     queryClient.removeQueries({ queryKey: ["wishlist"] });

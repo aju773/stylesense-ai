@@ -37,9 +37,6 @@ class CartItem(models.Model):
         on_delete=models.CASCADE,
         related_name="cart_items",
     )
-    # Blank, never null. In Postgres NULL != NULL, so a nullable column would
-    # let the unique constraint below pass for two "no size" lines of the same
-    # product — exactly the duplicate this model exists to prevent.
     size = models.CharField(max_length=20, blank=True, default="")
     color = models.CharField(max_length=50, blank=True, default="")
     quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
@@ -49,8 +46,6 @@ class CartItem(models.Model):
     class Meta:
         ordering = ["-added_at"]
         constraints = [
-            # Same shirt in M and L are two lines; the same shirt in M twice is
-            # one line with quantity 2.
             models.UniqueConstraint(
                 fields=["cart", "product", "size", "color"],
                 name="uniq_cart_product_variant",

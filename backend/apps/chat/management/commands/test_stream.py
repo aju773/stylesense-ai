@@ -13,7 +13,6 @@ class Command(BaseCommand):
         asyncio.run(self._test())
 
     async def _test(self):
-        # Grab any existing user (or create one)
         user = await User.objects.afirst()
         if not user:
             self.stderr.write("No users in DB. Create one first.")

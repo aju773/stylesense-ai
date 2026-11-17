@@ -20,8 +20,6 @@ function QuantityStepper({
       <button
         type="button"
         aria-label="Decrease quantity"
-        // Going below 1 is the "remove" action, not a quantity — the server
-        // rejects 0, so the button stops here and Remove handles the rest.
         disabled={disabled || quantity <= 1}
         onClick={() => onChange(quantity - 1)}
         className="w-8 h-8 flex items-center justify-center text-lg leading-none text-[#777] hover:text-[#1A1A1A] hover:bg-[#F9F7F4] transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
@@ -48,15 +46,12 @@ export default function CartLineItem({
   onNavigate,
 }: {
   item: CartItem;
-  /** Drawer layout — narrower thumbnail, stacked meta. */
   compact?: boolean;
   onNavigate?: () => void;
 }) {
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveCartItem();
 
-  // A placeholder line from an optimistic add has no server row yet, so there
-  // is nothing to PATCH or DELETE until the response lands.
   const isPending = item.id < 0 || updateItem.isPending || removeItem.isPending;
 
   const listPrice = Number(item.product.price);

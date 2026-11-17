@@ -33,9 +33,6 @@ def spa(request):
     index = Path(settings.FRONTEND_DIST) / "index.html"
 
     if not index.is_file():
-        # Normal in local development: the SPA is served by the Vite dev server
-        # on :5173 and Django only answers /api/. Being explicit beats a
-        # confusing 404 or an empty response.
         return HttpResponse(
             "Frontend build not found. In development the SPA is served by "
             "Vite on http://localhost:5173. In production it is built into "
@@ -44,9 +41,6 @@ def spa(request):
             content_type="text/plain",
         )
 
-    # Must not be cached: index.html is the one file whose name never changes,
-    # so a cached copy would keep pointing at asset filenames from an old
-    # deploy that no longer exist.
     response = FileResponse(index.open("rb"), content_type="text/html")
     response["Cache-Control"] = "no-cache, no-store, must-revalidate"
     return response

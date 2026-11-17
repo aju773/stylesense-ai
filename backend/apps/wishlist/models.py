@@ -26,18 +26,11 @@ class WishlistItem(models.Model):
         on_delete=models.CASCADE,
         related_name="wishlist_items",
     )
-    # CASCADE, unlike OrderItem's SET_NULL + snapshot. An order line is an
-    # accounting record that has to survive the catalog; a wishlist entry is a
-    # pointer into the live catalog, and a saved product that no longer exists
-    # is nothing a user could act on.
     product = models.ForeignKey(
         "products.Product",
         on_delete=models.CASCADE,
         related_name="wishlist_items",
     )
-    # What the page's two tabs read. An item is `ai` only when it was hearted
-    # off a recommendation card in chat — the assistant never writes here on its
-    # own, so "AI Picked" means "the AI suggested it and you kept it".
     source = models.CharField(
         max_length=10,
         choices=Source.choices,
@@ -54,8 +47,6 @@ class WishlistItem(models.Model):
             ),
         ]
         indexes = [
-            # The list endpoint always filters by user and the AI tab filters by
-            # source on top of it.
             models.Index(fields=["user", "source"], name="wishlist_user_source_idx"),
         ]
 

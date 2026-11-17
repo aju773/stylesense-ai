@@ -10,7 +10,6 @@ const NAV_LINKS = [
   { to: "/shop", label: "Shop" },
 ];
 
-/** Wordmark row collapses once the page has scrolled past its own height. */
 const RETRACT_THRESHOLD = 80;
 
 function SearchIcon() {
@@ -116,13 +115,6 @@ function NavRow() {
   );
 }
 
-/**
- * The header's first exposure of the `search` filter param — `ProductFilters`,
- * `FILTER_KEYS`, and the API's name+description `icontains` already exist,
- * nothing has ever surfaced a control for it. Expands inline rather than as a
- * fixed overlay: the header already establishes a `backdrop-filter` containing
- * block, which would otherwise mis-position a `position: fixed` dropdown.
- */
 function HeaderSearch() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -187,10 +179,6 @@ export default function SiteHeader() {
   const wishlistCount = useWishlistCount();
   const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
-  // /shop stacks a second sticky bar (the filter bar) right below the header.
-  // Elsewhere the wordmark row retracting and the nav row staying put is the
-  // whole story; on /shop the nav row retracts too, so the filter bar can
-  // take the sticky slot alone instead of ~100px of stacked chrome.
   const onShop = pathname === "/shop";
 
   useEffect(() => {

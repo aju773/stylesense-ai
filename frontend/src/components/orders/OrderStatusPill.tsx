@@ -1,9 +1,5 @@
 import type { OrderStatus } from "../../api/orders";
 
-/**
- * Cancelled is the only status that isn't part of forward progress, so it's the
- * only one that drops the accent colour — everything else is the order working.
- */
 const TONES: Record<OrderStatus, { dot: string; text: string; bg: string }> = {
   processing: { dot: "bg-[#B08442]", text: "text-[#8A6A34]", bg: "bg-[#FBF3E5]" },
   shipped: { dot: "bg-[#3B6FB0]", text: "text-[#2F5A8F]", bg: "bg-[#EDF3FA]" },

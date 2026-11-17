@@ -9,7 +9,6 @@ export default function CartDrawer() {
   const { isDrawerOpen, closeDrawer } = useCartUI();
   const { data: cart, isLoading } = useCart();
 
-  // Escape closes, and the page behind must not scroll while the panel is up.
   useEffect(() => {
     if (!isDrawerOpen) return;
 
@@ -32,8 +31,6 @@ export default function CartDrawer() {
 
   return (
     <>
-      {/* Scrim. Rendered always so opacity can transition; pointer-events-none
-          when closed keeps it from swallowing clicks on the page underneath. */}
       <div
         onClick={closeDrawer}
         aria-hidden="true"

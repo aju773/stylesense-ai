@@ -1,9 +1,3 @@
-/**
- * One checkbox row inside a facet popover or the mobile sheet — shared so the
- * zero-count-stays-visible-but-disabled rule only has one implementation.
- * A `0` is never hidden: it tells the shopper "Levi's makes no dresses"
- * instead of Levi's silently vanishing from the list.
- */
 export default function FacetOptionRow({
   label,
   count,

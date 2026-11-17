@@ -19,7 +19,6 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     if (!imgRef.current) return;
     const rect = imgRef.current.getBoundingClientRect();
-    // Convert mouse position to percentage within the image
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setZoomPos({ x, y });
@@ -27,7 +26,6 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Main image */}
       <div
         ref={imgRef}
         className="aspect-[4/5] bg-[#F5F5F5] relative overflow-hidden cursor-crosshair"
@@ -49,7 +47,6 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
           }
         />
       </div>
-      {/* Thumbnails — only show if multiple views */}
       {views.length > 1 && (
         <div className="grid grid-cols-4 gap-3">
           {views.map((view, i) => (

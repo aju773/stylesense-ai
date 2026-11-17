@@ -1,4 +1,3 @@
-// src/components/chat/TypingIndicator.tsx
 export default function TypingIndicator() {
   return (
     <div className="flex w-full justify-start">

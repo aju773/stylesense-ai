@@ -11,8 +11,6 @@ from .services.exceptions import EmptyCart, PaymentFailed, StockConflict
 
 class OrderListView(APIView):
     permission_classes = [IsAuthenticated]
-    # Placement takes row locks on real inventory and talks to a gateway. A
-    # client that can fire it in a loop can hold locks on the catalog.
     throttle_scope = "orders"
 
     def get(self, request):
@@ -31,8 +29,6 @@ class OrderListView(APIView):
         except EmptyCart as exc:
             return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
         except StockConflict as exc:
-            # 409, not 400: the request was well-formed and was valid when the
-            # customer sent it. The world moved.
             return Response(
                 {"detail": str(exc), "lines": exc.lines},
                 status=status.HTTP_409_CONFLICT,

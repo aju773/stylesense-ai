@@ -1,11 +1,6 @@
 import type { ChatProductCard } from "../../api/chat";
 import ProductCard from "../products/ProductCard";
 
-/**
- * Skeleton cards, one shape per breakpoint (see the responsive containers
- * below) — the block reserves its true height before the `products` event
- * arrives, sized by counting `[[product:id]]` markers as they stream in.
- */
 function Skeletons({ n }: { n: number }) {
   return (
     <>

@@ -86,8 +86,6 @@ class TokenRefreshView(APIView):
 
         try:
             old_refresh = RefreshToken(refresh_token)
-            # Rotation: get new access token, old refresh gets blacklisted
-            # (because ROTATE_REFRESH_TOKENS and BLACKLIST_AFTER_ROTATION are True)
             new_access = old_refresh.access_token
             response = Response({"detail": "Token refreshed."})
             set_token_cookies(response, new_access, old_refresh)
@@ -106,6 +104,4 @@ class MeView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
 
     def get_object(self):
-        # Ownership is enforced by construction: this always resolves to the
-        # requesting user, never to an id supplied by the client.
         return self.request.user

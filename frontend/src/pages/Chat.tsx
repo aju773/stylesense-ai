@@ -1,4 +1,3 @@
-// src/pages/Chat.tsx
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchConversationMessages } from "../api/chat";
@@ -30,10 +29,6 @@ export default function Chat() {
     setHistoryConversationId(id);
   }
 
-  // Adopt a newly-created conversation's id once the backend assigns one,
-  // and refresh the sidebar so it appears in the list. Deliberately does NOT
-  // touch historyConversationId — that message is already in useChat's live
-  // `messages`, so re-fetching it via REST would duplicate it.
   useEffect(() => {
     if (conversationId && Number(conversationId) !== activeConversationId) {
       setActiveConversationId(Number(conversationId));

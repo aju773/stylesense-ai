@@ -23,22 +23,11 @@ function HeartIcon({ filled, size = 18 }: { filled: boolean; size?: number }) {
 
 interface SaveButtonProps {
   product: WishlistProduct;
-  /**
-   * Where this save came from. `"ai"` only from chat recommendation cards — the
-   * assistant never writes to the wishlist itself, so an AI pick is one the
-   * user chose to keep.
-   */
   source?: WishlistSource;
-  /** `overlay` floats on a product image; `wide` is the full-width CTA. */
   variant?: "overlay" | "wide";
   className?: string;
 }
 
-/**
- * The heart. One control with two meanings, so it sends the product id and lets
- * the server report which one happened — the optimistic flip below is what
- * makes it feel instant, not what decides the outcome.
- */
 export default function SaveButton({
   product,
   source = "manual",
@@ -52,12 +41,9 @@ export default function SaveButton({
   const toggle = useToggleWishlist();
 
   const handleClick = (event: React.MouseEvent) => {
-    // Hearts sit on top of cards that are themselves links.
     event.preventDefault();
     event.stopPropagation();
 
-    // Saves are authenticated-only, so an anonymous heart is a login prompt.
-    // `from` brings them back to where they clicked.
     if (!isAuthenticated) {
       navigate("/login", { state: { from: location.pathname } });
       return;

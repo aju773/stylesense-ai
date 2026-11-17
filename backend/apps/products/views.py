@@ -8,11 +8,6 @@ from .filters import ProductFilter
 from .models import Category, Product
 from .serializers import CategorySerializer, ProductDetailSerializer, ProductSerializer
 
-# "Recommended" isn't a real column, and the other four options are locked to
-# one direction each (High-to-Low rating, not Low-to-High) — this is a curated
-# preset list, not generic per-field ordering, so a plain `ordering_fields`
-# allow-list can't express it. Every preset ends in `id` as a tiebreaker:
-# PageNumberPagination has no cursor to stay stable across ties on its own.
 SORT_PRESETS = {
     "recommended": ("-rating", "-created_at", "id"),
     "price": ("price", "id"),
@@ -30,10 +25,6 @@ class ProductSortFilter(OrderingFilter):
 
 
 class ProductPagination(PageNumberPagination):
-    # CursorPagination returned no `count`, which the shop's result count and
-    # facet counts both need on the same payload — see 11.5's decisions. A
-    # static 50-row catalog doesn't need cursor pagination's insertion-drift
-    # guarantees.
     page_size = 12
 
 
@@ -59,9 +50,6 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         page = self.paginate_queryset(queryset)
         serializer = self.get_serializer(page, many=True)
         response = self.get_paginated_response(serializer.data)
-        # Facets are computed against the unfiltered catalog, not the request's
-        # already-filtered queryset — each dimension reapplies every *other*
-        # active filter itself (see `build_facets`).
         response.data["facets"] = build_facets(request, self.get_queryset())
         return response
 
@@ -70,4 +58,4 @@ class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [permissions.AllowAny]
-    pagination_class = None  # small list, no pagination needed
+    pagination_class = None

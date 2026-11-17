@@ -84,28 +84,18 @@ def place_order(*, user, payment_token: str = "") -> Order:
     if not items:
         raise EmptyCart("Your bag is empty.")
 
-    # Snapshot the images before the swap below, while the prefetch is still
-    # attached to these instances.
     product_ids = sorted({item.product_id for item in items})
     image_urls = _primary_image_urls(product_ids)
 
-    # Lock every product this order touches, in ascending pk order. The ordering
-    # is not decoration: two orders sharing products would deadlock if they took
-    # the same rows in different sequences.
     locked = Product.objects.select_for_update().in_bulk(product_ids)
 
     problems = _stock_problems(items, locked)
     if problems:
         raise StockConflict(problems)
 
-    # Re-point every line at the row we just locked, before a single rupee is
-    # computed. The copies loaded above are pre-lock reads; another transaction
-    # may already have changed their price or stock. These CartItem instances
-    # are about to be deleted anyway, so mutating them in memory costs nothing.
     for item in items:
         item.product = locked[item.product_id]
 
-    # The one and only money calculation, borrowed wholesale from the cart.
     totals = cart_service.calculate_totals(items)
 
     for product_id, quantity in _units_per_product(items).items():
@@ -113,15 +103,6 @@ def place_order(*, user, payment_token: str = "") -> Order:
 
     order = Order(user=user, **_totals_to_columns(totals))
 
-    # Charge before the order row is written, so an order can never exist
-    # without a gateway reference. A decline raises out of this transaction and
-    # takes the stock decrement above with it.
-    #
-    # This does hold the product locks across the gateway call, which a
-    # high-volume shop would refuse to do — it would reserve stock in one
-    # transaction, charge outside it, and compensate on failure. That trade buys
-    # throughput at the cost of a compensating path that can itself fail. Here,
-    # a genuinely atomic rollback is worth more than lock-hold time.
     order.payment_reference = payment_service.charge(
         amount=totals["total"],
         order_number=order.order_number,

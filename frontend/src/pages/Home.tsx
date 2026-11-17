@@ -138,7 +138,6 @@ export default function Home() {
 
   return (
     <div>
-      {/* Hero */}
       <section className="max-w-[1280px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 py-16 lg:py-24 items-center">
         <div className="flex flex-col items-start gap-6">
           <div className="flex items-center gap-2 text-[#6366F1] text-xs font-semibold tracking-[0.15em] uppercase">
@@ -177,7 +176,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AI band */}
       <section className="bg-[#F9F7F4] py-16 lg:py-24">
         <div className="max-w-[1280px] mx-auto px-4 lg:px-8">
           <div className="text-center mb-12">
@@ -206,7 +204,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trending Now */}
       <section className="max-w-[1280px] mx-auto px-4 lg:px-8 py-16 lg:py-24">
         <div className="flex justify-between items-end mb-8 border-b border-[#E5E5E5] pb-4">
           <div>
@@ -231,7 +228,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* The Edit */}
       <section className="max-w-[1280px] mx-auto px-4 lg:px-8 py-16 lg:py-24">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {EDIT_TILES.map(({ image, label, gender }) => (
@@ -260,7 +256,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust bar */}
       <section className="max-w-[1280px] mx-auto px-4 lg:px-8 py-12 border-t border-[#E5E5E5]">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {TRUST_ITEMS.map(({ Icon, label, accent }) => (

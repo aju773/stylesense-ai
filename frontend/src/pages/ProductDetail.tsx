@@ -42,11 +42,7 @@ export default function ProductDetail() {
     );
   }
 
-  // Arrow const, not a declaration: only this form lets TypeScript keep the
-  // `product` narrowing from the guards above, so no non-null assertions.
   const handleAddToBag = () => {
-    // Carts are authenticated-only, so an anonymous add is a login prompt.
-    // `from` brings them back to this page after they sign in.
     if (!isAuthenticated) {
       navigate("/login", { state: { from: location.pathname } });
       return;
@@ -66,7 +62,6 @@ export default function ProductDetail() {
         size: selectedSize ?? "",
         color: selectedColor ?? "",
         quantity: 1,
-        // Lets the drawer show the line before the round-trip finishes.
         optimisticProduct: {
           id: product.id,
           name: product.name,
@@ -96,7 +91,6 @@ export default function ProductDetail() {
 
   return (
     <div className="max-w-[1280px] mx-auto px-4 py-12">
-      {/* Breadcrumbs */}
       <nav className="flex items-center gap-1.5 text-xs text-[#777] mb-8">
         <Link to="/" className="hover:text-[#1A1A1A] transition-colors">Home</Link>
         <span>›</span>
@@ -113,30 +107,24 @@ export default function ProductDetail() {
       </nav>
 
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
-        {/* Left — Image Gallery (55%) */}
         <div className="w-full lg:w-[55%]">
           <ImageGallery images={product.images ?? []} productName={product.name} />
         </div>
 
-        {/* Right — Product Info (45%), sticky on desktop */}
         <div className="w-full lg:w-[45%]">
           <div className="lg:sticky lg:top-24 flex flex-col gap-5">
-            {/* Brand */}
             <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#777]">
               {product.brand}
             </span>
 
-            {/* Name */}
             <h1 className="font-display text-3xl lg:text-4xl text-[#1A1A1A]">
               {product.name}
             </h1>
 
-            {/* Rating */}
             {Number(product.rating) > 0 && (
               <p className="text-sm text-[#777]">★ {product.rating} / 5</p>
             )}
 
-            {/* Price */}
             <div className="flex items-end gap-3">
               <span className="text-2xl font-semibold text-[#1A1A1A]">
                 {formatPrice(product.discount_price ?? product.price)}
@@ -155,7 +143,6 @@ export default function ProductDetail() {
 
             <div className="w-full h-px bg-[#E5E5E5]" />
 
-            {/* Color selector */}
             {product.colors.length > 0 && (
               <div>
                 <span className="block text-xs font-semibold tracking-[0.1em] uppercase text-[#1A1A1A] mb-3">
@@ -181,7 +168,6 @@ export default function ProductDetail() {
               </div>
             )}
 
-            {/* Size selector */}
             {product.sizes.length > 0 && (
               <div>
                 <span className="block text-xs font-semibold tracking-[0.1em] uppercase text-[#1A1A1A] mb-3">
@@ -206,12 +192,10 @@ export default function ProductDetail() {
               </div>
             )}
 
-            {/* Stock */}
             <p className={`text-sm ${product.stock > 0 ? "text-[#2D8A4E]" : "text-[#D64045]"}`}>
               {product.stock > 0 ? `✓ In Stock (${product.stock})` : "Out of Stock"}
             </p>
 
-            {/* Action buttons */}
             <div className="flex flex-col gap-3 mt-2">
               <button
                 type="button"
@@ -242,7 +226,6 @@ export default function ProductDetail() {
 
             <div className="w-full h-px bg-[#E5E5E5]" />
 
-            {/* Description */}
             <div>
               <h3 className="text-xs font-semibold tracking-[0.1em] uppercase text-[#1A1A1A] mb-2">
                 Description
@@ -252,7 +235,6 @@ export default function ProductDetail() {
               </p>
             </div>
 
-            {/* Meta */}
             <div className="flex gap-6 text-sm text-[#777] border-t border-[#E5E5E5] pt-4">
               <span>{product.gender}</span>
               <span>{product.category.name}</span>

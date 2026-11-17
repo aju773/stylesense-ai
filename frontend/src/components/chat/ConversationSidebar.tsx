@@ -1,4 +1,3 @@
-// src/components/chat/ConversationSidebar.tsx
 import { useEffect, useRef, useState } from "react";
 import { useConversations, useRenameConversation } from "../../hooks/useConversations";
 import type { Conversation } from "../../api/chat";
@@ -152,9 +151,6 @@ function ConversationRow({ conversation, isActive, onSelect }: ConversationRowPr
   );
 }
 
-/** Shared list content — same markup rendered inside both the desktop
- * inline panel and the mobile overlay drawer, so the two layout shells
- * never drift out of sync with each other. */
 function SidebarContent({
   activeConversationId,
   onSelectConversation,
@@ -212,8 +208,6 @@ export default function ConversationSidebar({
     localStorage.setItem(COLLAPSE_STORAGE_KEY, String(collapsed));
   }, [collapsed]);
 
-  // Mobile drawer: Escape closes, and the page behind must not scroll while
-  // the panel is up. Mirrors CartDrawer's own effect.
   useEffect(() => {
     if (!mobileOpen) return;
 
@@ -238,8 +232,6 @@ export default function ConversationSidebar({
 
   return (
     <>
-      {/* Desktop: inline, collapsible. The chevron toggle sits on a
-          non-collapsing wrapper so it stays reachable even at width 0. */}
       <div className="hidden md:block relative flex-shrink-0 h-full">
         <aside
           className={`h-full bg-[#F9F7F4] overflow-hidden transition-[width] duration-300 ease-in-out ${
@@ -260,7 +252,6 @@ export default function ConversationSidebar({
         </button>
       </div>
 
-      {/* Mobile: overlay drawer, same idiom as CartDrawer. */}
       <div
         onClick={onCloseMobile}
         aria-hidden="true"

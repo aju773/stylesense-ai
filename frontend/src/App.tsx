@@ -21,18 +21,13 @@ export default function App() {
       <AuthProvider>
         <CartUIProvider>
           <Routes>
-            {/* Login and register are deliberately outside AppLayout — they are
-                full-bleed pages with no header, and the cart chrome would be
-                noise on a page you cannot yet have a cart from. */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
             <Route element={<AppLayout />}>
-              {/* Public routes */}
               <Route path="/" element={<Home />} />
               <Route path="/shop" element={<Products />} />
               <Route path="/products/:slug" element={<ProductDetail />} />
-              {/* Protected routes */}
               <Route element={<ProtectedRoute />}>
                 <Route path="/chat" element={<Chat />} />
                 <Route path="/cart" element={<Cart />} />

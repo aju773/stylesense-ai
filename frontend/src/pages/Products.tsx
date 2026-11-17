@@ -27,8 +27,6 @@ export default function Products() {
   }
 
   const products = data?.pages.flatMap((page) => page.results) ?? [];
-  // Facets and the true result count describe the filter set, not the page —
-  // both ride on every page's response, but only the first is read.
   const facets = data?.pages[0]?.facets;
   const count = data?.pages[0]?.count ?? 0;
 

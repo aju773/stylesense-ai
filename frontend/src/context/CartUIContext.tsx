@@ -1,13 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
-/**
- * Purely presentational cart state: whether the drawer is showing.
- *
- * Cart *data* is server state and lives in TanStack Query (`useCart`). This
- * context deliberately holds nothing else, so there is exactly one place the
- * bag's contents can come from.
- */
 interface CartUIContextType {
   isDrawerOpen: boolean;
   openDrawer: () => void;

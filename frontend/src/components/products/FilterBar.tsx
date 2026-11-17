@@ -184,12 +184,6 @@ interface FilterBarProps {
   count: number;
 }
 
-/**
- * Replaces the left filter rail (4.4) with a top bar of facet popovers over a
- * full-width grid. Instant apply — no draft-then-Apply state — matching the
- * popover variant the 11.6 prototype measured as the only layout that shows
- * counts, holds all six facets, and stays at 56px.
- */
 export default function FilterBar({ filters, onChange, facets, count }: FilterBarProps) {
   const [openDesktop, setOpenDesktop] = useState<FacetKey | "price" | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -203,8 +197,6 @@ export default function FilterBar({ filters, onChange, facets, count }: FilterBa
   }
 
   function clearAll() {
-    // search/ordering aren't facets — clearing filters shouldn't blow away a
-    // search query or the shopper's chosen sort.
     onChange({ search: filters.search, ordering: filters.ordering });
   }
 
@@ -237,7 +229,6 @@ export default function FilterBar({ filters, onChange, facets, count }: FilterBa
   return (
     <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-[#E5E5E5]">
       <div className="max-w-[1280px] mx-auto px-4 lg:px-8">
-        {/* Desktop — six facet popovers in a row */}
         <div
           className="hidden lg:flex items-center gap-1 py-3"
           onMouseLeave={() => setOpenDesktop(null)}
@@ -271,7 +262,6 @@ export default function FilterBar({ filters, onChange, facets, count }: FilterBa
           </div>
         </div>
 
-        {/* Mobile — one trigger, the sheet does the rest */}
         <div className="flex lg:hidden items-center gap-3 py-3">
           <button
             type="button"
@@ -286,9 +276,6 @@ export default function FilterBar({ filters, onChange, facets, count }: FilterBa
           <SortSelect value={sortValue} onChange={handleSortChange} />
         </div>
 
-        {/* Chip row — both signals ship: the badge says how many, chips say
-            which. Price only ever appears here — a range has nothing to
-            badge a popover button with. */}
         {chips.length > 0 && (
           <div className="flex flex-wrap items-center gap-2 pb-3">
             {chips.map((chip) => (

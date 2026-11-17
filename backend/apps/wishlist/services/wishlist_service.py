@@ -53,17 +53,11 @@ def toggle(*, user, product_id: int, source: str) -> tuple[bool, WishlistItem | 
         return False, None
 
     try:
-        # Nested atomic: a unique-constraint violation marks the *savepoint*
-        # dirty rather than the whole outer transaction, so recovery is possible.
         with transaction.atomic():
             item = WishlistItem.objects.create(
                 user=user, product=product, source=source
             )
     except IntegrityError:
-        # Two identical saves raced. The user asked for it saved and it is
-        # saved — report that rather than a 500. The existing row's `source`
-        # is left alone: whichever request created it recorded where it came
-        # from, and the loser has nothing truer to say.
         item = WishlistItem.objects.get(user=user, product=product)
 
     return True, item

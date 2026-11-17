@@ -18,11 +18,8 @@ from django.conf import settings
 
 from .exceptions import PaymentFailed
 
-# Hand this in as the payment token to force a decline. The checkout UI offers
-# it behind a "simulate a declined payment" toggle.
 DECLINE_TOKEN = "tok_decline"
 
-# Anything else is accepted, including an empty token.
 DEFAULT_TOKEN = "tok_demo_visa"
 
 

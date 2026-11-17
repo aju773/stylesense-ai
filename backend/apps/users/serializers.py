@@ -6,10 +6,6 @@ from apps.products.models import Product
 
 User = get_user_model()
 
-# Closed vocabulary — see planning/stylesense-ai/issues/11.8-style-profile-backend.md.
-# Vibes are interpolated into SYSTEM_PROMPT and folded into the embedded retrieval
-# query, so free text here would be a prompt-injection surface. Only strings the
-# server itself chose are ever allowed through.
 VIBE_CHOICES = ("Minimalist", "Tailored", "Bohemian", "Streetwear", "Monochrome")
 SIZE_CHOICES = ("XS", "S", "M", "L", "XL", "XXL")
 

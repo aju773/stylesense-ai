@@ -1,4 +1,3 @@
-// src/components/chat/ChatInput.tsx
 import { useState } from "react";
 import type { KeyboardEvent } from "react";
 

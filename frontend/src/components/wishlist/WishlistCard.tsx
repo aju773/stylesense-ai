@@ -33,7 +33,6 @@ export default function WishlistCard({ item }: { item: WishlistItem }) {
   const removeItem = useRemoveWishlistItem();
   const { product, in_stock: inStock } = item;
 
-  // A placeholder from an optimistic save has no server row to DELETE yet.
   const isPlaceholder = item.id < 0;
   const price = product.discount_price ?? product.price;
 
@@ -52,9 +51,6 @@ export default function WishlistCard({ item }: { item: WishlistItem }) {
           }`}
         />
 
-        {/* The heart on this page only ever removes, so it is a delete by row
-            id — not the toggle. Through a toggle, an impatient double-click
-            here would remove the product and then save it straight back. */}
         <button
           type="button"
           onClick={() => removeItem.mutate(item.id)}
@@ -73,18 +69,9 @@ export default function WishlistCard({ item }: { item: WishlistItem }) {
           </div>
         )}
 
-        {/* Every product in the catalog is sold in sizes and colors, so this
-            cannot add to the bag directly — it would have to invent a variant.
-            It goes to the product page, where the real picker already is. */}
         {inStock && (
           <Link
             to={`/products/${product.slug}`}
-            // Hidden-then-revealed only where hovering is possible. Tailwind
-            // compiles `group-hover:` inside `@media (hover: hover)`, so on a
-            // touch device the reveal never fires — hiding it there by default
-            // would leave the card's primary control permanently unreachable.
-            // Keyed on the capability rather than a width, because a touch
-            // tablet is wide and still cannot hover.
             className="absolute inset-x-0 bottom-0 p-3 transition-all duration-300 ease-out z-10 [@media(hover:hover)]:translate-y-full [@media(hover:hover)]:opacity-0 group-hover:translate-y-0 group-hover:opacity-100 focus-within:translate-y-0 focus-within:opacity-100"
           >
             <span className="block w-full py-3 bg-[#1A1A1A]/90 backdrop-blur text-white text-center text-[10px] font-semibold tracking-[0.15em] uppercase hover:bg-[#1A1A1A] transition-colors">
@@ -99,8 +86,6 @@ export default function WishlistCard({ item }: { item: WishlistItem }) {
           <span className="text-[10px] tracking-[0.15em] uppercase text-[#777] truncate">
             {product.brand}
           </span>
-          {/* The tabs separate these, but in All Saved this label is the only
-              thing that says where a save came from. */}
           {item.source === "ai" && (
             <span className="text-[10px] tracking-[0.1em] uppercase text-[#6366F1] whitespace-nowrap">
               ✦ AI Pick

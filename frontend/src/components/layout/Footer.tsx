@@ -14,11 +14,6 @@ const ACCOUNT_LINKS = [
   { to: "/profile", label: "My Account" },
 ];
 
-/**
- * Every tile lands on a real destination — no Support column (no shipping
- * page, style guide, or contact form to link to) and no newsletter field (no
- * endpoint, no model, no email service behind it).
- */
 export default function Footer() {
   const year = new Date().getFullYear();
 

@@ -14,7 +14,6 @@ from apps.products.models import Product
 from ..models import Cart, CartItem
 from .exceptions import InsufficientStock, InvalidVariant, ProductUnavailable
 
-# Bounded so a fat-fingered or scripted quantity can't create an absurd line.
 MAX_QUANTITY_PER_LINE = 10
 
 
@@ -95,8 +94,6 @@ def add_item(
     _validate_variant(product, size, color)
 
     cart = get_or_create_cart(user)
-    # select_for_update: two concurrent adds of the same variant would otherwise
-    # both read the old quantity and one increment would be lost.
     existing = (
         CartItem.objects.select_for_update()
         .filter(cart=cart, product=product, size=size, color=color)

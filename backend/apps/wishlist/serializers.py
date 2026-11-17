@@ -27,9 +27,6 @@ class WishlistItemSerializer(serializers.ModelSerializer):
 
 class ToggleWishlistSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
-    # Only consulted when the toggle creates a row. Re-saving from the catalog a
-    # product that was first saved from chat records it as manual — which is
-    # accurate, that is where this save came from.
     source = serializers.ChoiceField(
         choices=WishlistItem.Source.choices,
         default=WishlistItem.Source.MANUAL,

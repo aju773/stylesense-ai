@@ -23,12 +23,6 @@ function Thumb({ item, size }: { item: OrderItem; size: "sm" | "md" }) {
   );
 }
 
-/**
- * A purchased line renders from the order's own snapshot, never from the live
- * catalog. `product_id` goes null if the product is later deleted, which is
- * exactly when the name still has to be readable — so the link is conditional
- * and the text is not.
- */
 function LineItem({ item }: { item: OrderItem }) {
   const saved = Number(item.list_price) - Number(item.unit_price);
 

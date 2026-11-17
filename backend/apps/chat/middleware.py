@@ -25,7 +25,6 @@ class JWTAuthMiddleware:
         self.app = app
 
     async def __call__(self, scope, receive, send):
-        # Parse cookies from raw headers
         headers = dict(scope.get("headers", []))
         raw_cookie = headers.get(b"cookie", b"").decode()
         cookie = SimpleCookie()

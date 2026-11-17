@@ -1,9 +1,5 @@
 import type { OrderStatus } from "../../api/orders";
 
-/**
- * The four beats the design shows. "Ordered" isn't a stored status — it is
- * implied by the order existing at all, so it is always complete.
- */
 const STEPS: { key: OrderStatus | "ordered"; label: string }[] = [
   { key: "ordered", label: "Ordered" },
   { key: "processing", label: "Processing" },
@@ -12,7 +8,6 @@ const STEPS: { key: OrderStatus | "ordered"; label: string }[] = [
 ];
 
 export default function OrderTracker({ status }: { status: OrderStatus }) {
-  // A cancelled order has no position on this line, so it doesn't get one.
   if (status === "cancelled") {
     return (
       <p className="text-sm text-[#777] mb-10">

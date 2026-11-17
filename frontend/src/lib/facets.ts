@@ -1,5 +1,3 @@
-// Shared between FilterBar's desktop popovers and FilterSheet's mobile sheet
-// — both render the same five facet dimensions and toggle values the same way.
 
 export type FacetKey = "category" | "gender" | "brand" | "color" | "size";
 

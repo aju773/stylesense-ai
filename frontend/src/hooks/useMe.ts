@@ -4,11 +4,6 @@ import { useAuth } from "../context/AuthContext";
 
 export const ME_QUERY_KEY = ["me"] as const;
 
-/**
- * Separate from `AuthContext`'s own `user` — that state only ever needs
- * `isAuthenticated`, so nothing else reads its `style_preferences`. The
- * profile page owns its own query rather than growing the context's surface.
- */
 export function useMe() {
   const { isAuthenticated } = useAuth();
 

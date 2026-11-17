@@ -1,4 +1,3 @@
-// src/api/chat.ts
 import api from "./axios";
 
 export interface Conversation {

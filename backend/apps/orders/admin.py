@@ -6,8 +6,6 @@ from .models import Order, OrderItem
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
-    # Lines are a snapshot of a completed transaction. Editing them in the
-    # admin would silently desync them from the order's frozen totals.
     readonly_fields = (
         "product",
         "product_name",

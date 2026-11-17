@@ -1,22 +1,9 @@
-// src/components/chat/ChatBubble.tsx
 import ReactMarkdown from "react-markdown";
 import type { ChatMessage } from "../../hooks/useChat";
 import PicksBlock from "./PicksBlock";
 
-// The AI cites catalog products with [[product:12]] markers. They are a
-// machine-readable contract, not prose — the backend turns them into the card
-// payload, and they must never reach the reader's eyes. Stripped here rather
-// than server-side so the markers survive in ChatMessage.content, which is what
-// lets history rebuild card ordering later.
 const MARKER_RE = /\s*\[\[product:\d+\]\]/g;
-// [[why:12]] rationale lines land on their own lines after the prose (see
-// SYSTEM_PROMPT in chat_service.py) and are just as invisible-by-contract as
-// the product markers — the reason text itself is surfaced on the picks block
-// below, reparsed server-side, never rendered from raw prose here.
 const WHY_BLOCK_RE = /\n*\[\[why:[\s\S]*$/;
-// Distinct ids only, mirroring the backend's own dedup — a marker repeated by
-// a confused model shouldn't inflate the skeleton count past what `products`
-// will actually contain.
 function countPendingProducts(content: string): number {
   const ids = new Set<string>();
   for (const match of content.matchAll(/\[\[product:(\d+)\]\]/g)) {
@@ -35,9 +22,6 @@ export default function ChatBubble({
   const displayContent = isUser
     ? content
     : content.replace(MARKER_RE, "").replace(WHY_BLOCK_RE, "").trimEnd();
-  // Only meaningful for the one live message still streaming with no
-  // `products` event yet — history and finished turns always skip straight to
-  // rendering real cards.
   const pendingCount =
     !isUser && isStreaming && !products ? countPendingProducts(content) : 0;
 

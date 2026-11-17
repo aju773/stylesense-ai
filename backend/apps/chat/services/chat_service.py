@@ -106,7 +106,6 @@ class ChatService:
         Returns:
             tuple[Conversation, ChatMessage]: The conversation and AI response message.
         """
-        # 1. Load or create conversation
         if conversation_id:
             conversation = await Conversation.objects.aget(
                 pk=conversation_id,
@@ -114,40 +113,32 @@ class ChatService:
             )
         else:
             conversation = await Conversation.objects.acreate(user=user)
-        # 2. Save user message
         await ChatMessage.objects.acreate(
             conversation=conversation,
             role="user",
             content=message_text,
         )
-        # 3. Load recent history
         history_qs = conversation.messages.all().order_by("-created_at")[:HISTORY_LIMIT]
         history = []
         async for msg in history_qs:
             history.append({"role": msg.role, "content": msg.content})
-        history.reverse()  # Back to chronological order
-        # 4. Build product context via vector search
+        history.reverse()
         product_context = await self.context_builder.build_product_context(
             message_text,
             user,
         )
-        # 5. Construct messages for AI
         system_prompt = SYSTEM_PROMPT.format(
             user_profile=_build_user_profile_block(user),
             product_context=product_context,
         )
         messages = [{"role": "system", "content": system_prompt}] + history
-        # 6. Call AI
         ai_response = await self.orchestrator.generate_completion(messages)
-        # 7. Save AI response
         ai_message = await ChatMessage.objects.acreate(
             conversation=conversation,
             role="assistant",
             content=ai_response,
         )
-        # 7b. Link cited catalog products
         await self._attach_cited_products(ai_message, ai_response)
-        # 8. Auto-generate title from first message
         if not conversation.title:
             conversation.title = message_text[:50]
             await conversation.asave(update_fields=["title"])
@@ -168,52 +159,40 @@ class ChatService:
             )
         else:
             conversation = await Conversation.objects.acreate(user=user)
-        # 2. Save user message
         await ChatMessage.objects.acreate(
             conversation=conversation,
             role="user",
             content=message_text,
         )
-        # >>> NEW: Yield stream_start with conversation_id
         yield {"event": "stream_start", "conversation_id": str(conversation.pk)}
-        # 3. Load recent history
         history_qs = conversation.messages.all().order_by("-created_at")[:HISTORY_LIMIT]
         history = []
         async for msg in history_qs:
             history.append({"role": msg.role, "content": msg.content})
         history.reverse()
-        # 4. Build product context via vector search
         product_context = await self.context_builder.build_product_context(
             message_text,
             user,
         )
-        # 5. Construct messages for AI
         system_prompt = SYSTEM_PROMPT.format(
             user_profile=_build_user_profile_block(user),
             product_context=product_context,
         )
         messages = [{"role": "system", "content": system_prompt}] + history
-        # 6. Stream AI response, accumulating tokens
         full_response = []
         async for token in self.orchestrator.generate_completion_stream(messages):
             full_response.append(token)
             yield {"event": "token", "content": token}
-        # 7. Save complete AI response
         ai_content = "".join(full_response)
         ai_message = await ChatMessage.objects.acreate(
             conversation=conversation,
             role="assistant",
             content=ai_content,
         )
-        # 7b. Link cited catalog products and ship the cards to the client.
-        # Serialized here rather than in the consumer so the WebSocket and the
-        # REST history endpoint hand the frontend an identical card shape.
         products = await self._attach_cited_products(ai_message, ai_content)
         if products:
             yield {"event": "products", "products": products}
-        # 8. Auto-generate title from first message
         if not conversation.title:
             conversation.title = message_text[:50]
             await conversation.asave(update_fields=["title"])
-        # >>> NEW: Yield stream_end with message_id
         yield {"event": "stream_end", "message_id": str(ai_message.pk), "conversation_id": str(conversation.pk)}

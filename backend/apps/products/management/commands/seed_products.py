@@ -25,14 +25,12 @@ class Command(BaseCommand):
         images_created_count = 0
 
         for item in products_data:
-            # Get or create category
             category_name = item["category"]
             category, _ = Category.objects.get_or_create(
                 slug=slugify(category_name),
                 defaults={"name": category_name},
             )
 
-            # Get or create product
             product, created = Product.objects.get_or_create(
                 slug=slugify(item["name"]),
                 defaults={
@@ -55,12 +53,6 @@ class Command(BaseCommand):
             else:
                 skipped_count += 1
 
-            # Images are seeded independently of whether the product itself
-            # was just created — get_or_create above skips existing products
-            # on every re-run, but an already-seeded database still needs its
-            # ProductImage rows populated. Keying on (product, display_order)
-            # keeps this idempotent: re-running the command never duplicates
-            # rows, whether the product is new or 49 sub-tickets old.
             for order, image_url in enumerate(item.get("images", [])):
                 _, image_created = ProductImage.objects.get_or_create(
                     product=product,
